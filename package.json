@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/malintheier/semester-project-2#readme",
   "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2"
   }
 }
