@@ -3,8 +3,10 @@ const API_LISTINGS_URL =
 
 const listElement = document.querySelector("#active-listings");
 const statusElement = document.querySelector("#active-listings-status");
+const searchElement = document.querySelector("#listings-search");
+let allListings = [];
 
-if (!listElement || !statusElement) {
+if (!listElement || !statusElement || !searchElement) {
   throw new Error("Listings markup is missing required elements.");
 }
 
@@ -45,11 +47,41 @@ function getPrimaryImage(listing) {
   };
 }
 
+function getListingKeywords(listing) {
+  const tags = Array.isArray(listing?.tags) ? listing.tags.join(" ") : "";
+  const description = String(listing?.description || "");
+  return `${tags} ${description}`.toLowerCase();
+}
+
+function matchesSearch(listing, query) {
+  if (!query) {
+    return true;
+  }
+
+  const title = String(listing?.title || "").toLowerCase();
+  const keywords = getListingKeywords(listing);
+  return title.includes(query) || keywords.includes(query);
+}
+
+function filterListings(query) {
+  const normalizedQuery = String(query || "")
+    .trim()
+    .toLowerCase();
+  return allListings.filter((listing) =>
+    matchesSearch(listing, normalizedQuery),
+  );
+}
+
 function renderListings(listings) {
   listElement.innerHTML = "";
 
   if (!listings.length) {
-    setStatus("No active listings right now.");
+    const hasQuery = String(searchElement.value || "").trim().length > 0;
+    setStatus(
+      hasQuery
+        ? "No listings match your search."
+        : "No active listings right now.",
+    );
     return;
   }
 
@@ -104,8 +136,8 @@ async function loadActiveListings() {
       throw new Error(errorMessage);
     }
 
-    const listings = Array.isArray(json?.data) ? json.data : [];
-    renderListings(listings);
+    allListings = Array.isArray(json?.data) ? json.data : [];
+    renderListings(filterListings(searchElement.value));
   } catch (error) {
     setStatus(
       error instanceof Error
@@ -115,5 +147,9 @@ async function loadActiveListings() {
     );
   }
 }
+
+searchElement.addEventListener("input", () => {
+  renderListings(filterListings(searchElement.value));
+});
 
 loadActiveListings();
