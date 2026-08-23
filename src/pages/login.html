@@ -9,7 +9,23 @@
   <body>
     <main>
       <h1>Log in</h1>
-      <form></form>
+      <form id="login-form" novalidate>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required />
+
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          required
+          minlength="8"
+        />
+
+        <button type="submit">Log in</button>
+      </form>
+      <p id="login-message" role="status" aria-live="polite"></p>
     </main>
+    <script type="module" src="../scripts/login.js"></script>
   </body>
 </html>
