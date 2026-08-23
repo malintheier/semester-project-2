@@ -12,7 +12,26 @@
   <body>
     <main>
       <h1>Create an account</h1>
-      <form></form>
+      <form id="register-form" novalidate>
+        <label for="name">Username</label>
+        <input id="name" name="name" type="text" required minlength="2" />
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required />
+
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          required
+          minlength="8"
+        />
+
+        <button type="submit">Register</button>
+      </form>
+      <p id="register-message" role="status" aria-live="polite"></p>
     </main>
+    <script type="module" src="../scripts/register.js"></script>
   </body>
 </html>
