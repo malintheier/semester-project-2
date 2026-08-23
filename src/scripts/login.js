@@ -1,8 +1,9 @@
+import { TOKEN_STORAGE_KEY, setUserState } from "./user-state.js";
+
 const API_LOGIN_URL = "https://v2.api.noroff.dev/auth/login";
 const STUDENT_EMAIL_PATTERN = /^[^\s@]+@stud\.noroff\.no$/i;
-const TOKEN_STORAGE_KEY = "arthaus_access_token";
-const USER_STORAGE_KEY = "arthaus_user";
 const REDIRECT_URL = "./profile.html";
+const STARTING_CREDITS = 1000;
 
 const form = document.querySelector("#login-form");
 const message = document.querySelector("#login-message");
@@ -66,13 +67,11 @@ form.addEventListener("submit", async (event) => {
     }
 
     localStorage.setItem(TOKEN_STORAGE_KEY, accessToken);
-    localStorage.setItem(
-      USER_STORAGE_KEY,
-      JSON.stringify({
-        name: json?.data?.name || "",
-        email: json?.data?.email || email,
-      }),
-    );
+    setUserState({
+      name: json?.data?.name || "",
+      email: json?.data?.email || email,
+      credits: Number(json?.data?.credits ?? STARTING_CREDITS),
+    });
 
     setMessage("Login successful. Redirecting...");
     window.location.href = REDIRECT_URL;
