@@ -15,8 +15,14 @@
     </header>
     <main>
       <h1>Discover artwork</h1>
+      <section aria-labelledby="active-listings-heading">
+        <h2 id="active-listings-heading">Active listings</h2>
+        <p id="active-listings-status" role="status" aria-live="polite"></p>
+        <ul id="active-listings"></ul>
+      </section>
     </main>
     <footer></footer>
     <script type="module" src="./src/scripts/user-state.js"></script>
+    <script type="module" src="./src/scripts/listings.js"></script>
   </body>
 </html>
