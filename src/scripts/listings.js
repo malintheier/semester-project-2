@@ -4,9 +4,10 @@ const API_LISTINGS_URL =
 const listElement = document.querySelector("#active-listings");
 const statusElement = document.querySelector("#active-listings-status");
 const searchElement = document.querySelector("#listings-search");
+const categoryElement = document.querySelector("#listings-category");
 let allListings = [];
 
-if (!listElement || !statusElement || !searchElement) {
+if (!listElement || !statusElement || !searchElement || !categoryElement) {
   throw new Error("Listings markup is missing required elements.");
 }
 
@@ -63,12 +64,28 @@ function matchesSearch(listing, query) {
   return title.includes(query) || keywords.includes(query);
 }
 
-function filterListings(query) {
+function matchesCategory(listing, category) {
+  if (category === "all") {
+    return true;
+  }
+
+  const tags = Array.isArray(listing?.tags)
+    ? listing.tags.map((tag) => String(tag).toLowerCase())
+    : [];
+
+  return tags.includes(category);
+}
+
+function filterListings(query, category) {
   const normalizedQuery = String(query || "")
     .trim()
     .toLowerCase();
-  return allListings.filter((listing) =>
-    matchesSearch(listing, normalizedQuery),
+  const normalizedCategory = String(category || "all").toLowerCase();
+
+  return allListings.filter(
+    (listing) =>
+      matchesSearch(listing, normalizedQuery) &&
+      matchesCategory(listing, normalizedCategory),
   );
 }
 
@@ -77,8 +94,13 @@ function renderListings(listings) {
 
   if (!listings.length) {
     const hasQuery = String(searchElement.value || "").trim().length > 0;
+    const selectedCategory = String(
+      categoryElement.value || "all",
+    ).toLowerCase();
+    const hasCategoryFilter = selectedCategory !== "all";
+
     setStatus(
-      hasQuery
+      hasQuery || hasCategoryFilter
         ? "No listings match your search."
         : "No active listings right now.",
     );
@@ -137,7 +159,7 @@ async function loadActiveListings() {
     }
 
     allListings = Array.isArray(json?.data) ? json.data : [];
-    renderListings(filterListings(searchElement.value));
+    renderListings(filterListings(searchElement.value, categoryElement.value));
   } catch (error) {
     setStatus(
       error instanceof Error
@@ -149,7 +171,11 @@ async function loadActiveListings() {
 }
 
 searchElement.addEventListener("input", () => {
-  renderListings(filterListings(searchElement.value));
+  renderListings(filterListings(searchElement.value, categoryElement.value));
+});
+
+categoryElement.addEventListener("change", () => {
+  renderListings(filterListings(searchElement.value, categoryElement.value));
 });
 
 loadActiveListings();

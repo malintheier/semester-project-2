@@ -24,6 +24,13 @@
           type="search"
           placeholder="Search by title or keyword"
         />
+        <label for="listings-category">Category</label>
+        <select id="listings-category" name="listings-category">
+          <option value="all">All</option>
+          <option value="oil">Oil</option>
+          <option value="acrylic">Acrylic</option>
+          <option value="watercolor">Watercolor</option>
+        </select>
         <p id="active-listings-status" role="status" aria-live="polite"></p>
         <ul id="active-listings"></ul>
       </section>
