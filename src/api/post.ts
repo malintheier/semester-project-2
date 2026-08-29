@@ -2,6 +2,7 @@ export async function post<TResponse, TBody>(
   url: string,
   body: TBody,
   token?: string,
+  apiKey?: string,
 ): Promise<TResponse> {
   const headers = new Headers({
     Accept: "application/json",
@@ -10,6 +11,10 @@ export async function post<TResponse, TBody>(
 
   if (token) {
     headers.set("Authorization", `Bearer ${token}`);
+  }
+
+  if (apiKey) {
+    headers.set("X-Noroff-API-Key", apiKey);
   }
 
   const response = await fetch(url, {

@@ -1,5 +1,6 @@
 import { post } from "../api/post";
 import type { ApiResponse, LoginBody, LoginResponse } from "../types";
+import { getOrCreateApiKey } from "./api-key";
 import {
   STARTING_CREDITS,
   TOKEN_STORAGE_KEY,
@@ -61,6 +62,7 @@ form.addEventListener("submit", async (event: SubmitEvent) => {
       throw new Error("Login succeeded, but token is missing from response.");
     }
 
+    await getOrCreateApiKey(accessToken);
     localStorage.setItem(TOKEN_STORAGE_KEY, accessToken);
     setUserState({
       name: response.data.name || "",

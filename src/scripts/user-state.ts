@@ -1,6 +1,7 @@
 import type { UserState } from "../types";
 
 export const TOKEN_STORAGE_KEY = "arthaus_access_token";
+export const API_KEY_STORAGE_KEY = "arthaus_api_key";
 export const USER_STORAGE_KEY = "arthaus_user";
 export const STARTING_CREDITS = 1000;
 
@@ -34,8 +35,10 @@ export function setUserState(user: UserState): void {
 
 export function clearUserState(): void {
   localStorage.removeItem(TOKEN_STORAGE_KEY);
+  localStorage.removeItem(API_KEY_STORAGE_KEY);
   localStorage.removeItem(USER_STORAGE_KEY);
   sessionStorage.removeItem(TOKEN_STORAGE_KEY);
+  sessionStorage.removeItem(API_KEY_STORAGE_KEY);
   sessionStorage.removeItem(USER_STORAGE_KEY);
   window.dispatchEvent(
     new CustomEvent<null>("arthaus:user-state-updated", {

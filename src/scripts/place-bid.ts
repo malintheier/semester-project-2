@@ -1,6 +1,7 @@
 import { get } from "../api/get";
 import { post } from "../api/post";
 import type { ApiResponse, Bid, Listing } from "../types";
+import { getOrCreateApiKey } from "./api-key";
 import {
   getUserCredits,
   TOKEN_STORAGE_KEY,
@@ -287,10 +288,12 @@ bidForm.addEventListener("submit", async (event) => {
   }
 
   try {
+    const apiKey = await getOrCreateApiKey(token);
     const response = await post<ApiResponse<Listing>, { amount: number }>(
       `${API_BASE_URL}/${encodeURIComponent(currentListing.id)}/bids`,
       { amount },
       token,
+      apiKey,
     );
     currentListing = response.data;
     updateUserCredits(credits - amount);

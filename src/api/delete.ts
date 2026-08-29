@@ -1,6 +1,7 @@
 export async function deleteRequest<TResponse>(
   url: string,
   token?: string,
+  apiKey?: string,
 ): Promise<TResponse | undefined> {
   const headers = new Headers({
     Accept: "application/json",
@@ -8,6 +9,10 @@ export async function deleteRequest<TResponse>(
 
   if (token) {
     headers.set("Authorization", `Bearer ${token}`);
+  }
+
+  if (apiKey) {
+    headers.set("X-Noroff-API-Key", apiKey);
   }
 
   const response = await fetch(url, {
