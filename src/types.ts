@@ -32,6 +32,8 @@ export interface Listing {
   tags?: string[];
   media?: MediaItem[];
   bids?: Bid[];
+  created?: string;
+  updated?: string;
   endsAt?: string;
   seller?: {
     name?: string;

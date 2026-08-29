@@ -166,6 +166,18 @@ function renderFeatured(listing: Listing): void {
   featuredBidLink.href = `./src/pages/place-bid.html${id}`;
 }
 
+function getNewestListing(listings: Listing[]): Listing | undefined {
+  return listings.reduce<Listing | undefined>((newest, listing) => {
+    if (!newest) {
+      return listing;
+    }
+
+    const newestCreated = new Date(newest.created || "").getTime();
+    const listingCreated = new Date(listing.created || "").getTime();
+    return listingCreated > newestCreated ? listing : newest;
+  }, undefined);
+}
+
 function renderListings(): void {
   const listings = filterAndSortListings();
   listElement.innerHTML = "";
@@ -231,8 +243,10 @@ async function loadActiveListings(loadMore = false): Promise<void> {
     allListings = loadMore ? [...allListings, ...listings] : listings;
     hasMoreListings = listings.length === LISTINGS_PER_PAGE;
     currentPage += 1;
-    if (!loadMore && listings[0]) {
-      renderFeatured(listings[0]);
+    const newestListing = !loadMore ? getNewestListing(listings) : undefined;
+
+    if (newestListing) {
+      renderFeatured(newestListing);
     }
     renderListings();
   } catch (error) {
