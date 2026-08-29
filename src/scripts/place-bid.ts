@@ -1,9 +1,12 @@
 import { get } from "../api/get";
 import { post } from "../api/post";
+import { put } from "../api/put";
+import { deleteRequest } from "../api/delete";
 import type { ApiResponse, Bid, Listing } from "../types";
 import { getOrCreateApiKey } from "./api-key";
 import {
   getUserCredits,
+  getUserState,
   TOKEN_STORAGE_KEY,
   updateUserCredits,
 } from "./user-state";
@@ -42,6 +45,24 @@ const bidHistoryElement = requireElement<HTMLOListElement>("#bid-history");
 const bidForm = requireElement<HTMLFormElement>("#bid-form");
 const bidAmountElement = requireElement<HTMLInputElement>("#bid-amount");
 const bidMessageElement = requireElement<HTMLParagraphElement>("#bid-message");
+const bidActionsElement = requireElement<HTMLDivElement>("#bid-actions");
+const listingManagementElement = requireElement<HTMLElement>(
+  "#listing-management",
+);
+const editListingForm = requireElement<HTMLFormElement>("#edit-listing-form");
+const editTitleElement = requireElement<HTMLInputElement>(
+  "#edit-listing-title",
+);
+const editDescriptionElement = requireElement<HTMLTextAreaElement>(
+  "#edit-listing-description",
+);
+const editTagsElement = requireElement<HTMLInputElement>("#edit-listing-tags");
+const editMediaElement = requireElement<HTMLTextAreaElement>(
+  "#edit-listing-media",
+);
+const deleteListingButton = requireElement<HTMLButtonElement>(
+  "#delete-listing-button",
+);
 const daysElement = requireElement<HTMLSpanElement>("#countdown-days");
 const hoursElement = requireElement<HTMLSpanElement>("#countdown-hours");
 const minutesElement = requireElement<HTMLSpanElement>("#countdown-minutes");
@@ -91,6 +112,29 @@ function formatDate(value?: string): string {
 
 function formatCategory(category: string): string {
   return `${category[0].toUpperCase()}${category.slice(1)}`;
+}
+
+function isListingCreator(listing: Listing): boolean {
+  const user = getUserState();
+  return Boolean(user?.name && listing.seller?.name === user.name);
+}
+
+function renderListingManagement(listing: Listing): void {
+  const isCreator = isListingCreator(listing);
+  bidActionsElement.classList.toggle("hidden", isCreator);
+  listingManagementElement.classList.toggle("hidden", !isCreator);
+
+  if (!isCreator) {
+    return;
+  }
+
+  editTitleElement.value = listing.title || "";
+  editDescriptionElement.value = listing.description || "";
+  editTagsElement.value = (listing.tags || []).join(", ");
+  editMediaElement.value = (listing.media || [])
+    .map((media) => media.url || "")
+    .filter(Boolean)
+    .join("\n");
 }
 
 function renderMedia(listing: Listing): void {
@@ -226,6 +270,7 @@ function renderListing(listing: Listing): void {
   }
 
   renderMedia(listing);
+  renderListingManagement(listing);
   renderBidHistory(listing.bids || []);
   updateCountdown();
   window.clearInterval(countdownTimer);
@@ -303,6 +348,104 @@ bidForm.addEventListener("submit", async (event) => {
   } catch (error) {
     setBidMessage(
       error instanceof Error ? error.message : "Could not place bid.",
+      true,
+    );
+  }
+});
+
+editListingForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (!currentListing?.id || !isListingCreator(currentListing)) {
+    setBidMessage("You can only update your own listings.", true);
+    return;
+  }
+
+  const token = localStorage.getItem(TOKEN_STORAGE_KEY);
+
+  if (!token) {
+    setBidMessage("Log in before updating this listing.", true);
+    return;
+  }
+
+  const title = editTitleElement.value.trim();
+  const description = editDescriptionElement.value.trim();
+
+  if (!title) {
+    setBidMessage("Listing title is required.", true);
+    return;
+  }
+
+  const tags = editTagsElement.value
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+  const media = editMediaElement.value
+    .split("\n")
+    .map((url) => url.trim())
+    .filter(Boolean)
+    .map((url) => ({ url, alt: title }));
+
+  try {
+    const apiKey = await getOrCreateApiKey(token);
+    const response = await put<
+      ApiResponse<Listing>,
+      {
+        title: string;
+        description: string;
+        tags: string[];
+        media: { url: string; alt: string }[];
+      }
+    >(
+      `${API_BASE_URL}/${encodeURIComponent(currentListing.id)}`,
+      { title, description, tags, media },
+      token,
+      apiKey,
+    );
+    currentListing = {
+      ...currentListing,
+      ...response.data,
+      seller: response.data.seller || currentListing.seller,
+      bids: response.data.bids || currentListing.bids,
+    };
+    renderListing(currentListing);
+    setBidMessage("Listing updated successfully.");
+  } catch (error) {
+    setBidMessage(
+      error instanceof Error ? error.message : "Could not update listing.",
+      true,
+    );
+  }
+});
+
+deleteListingButton.addEventListener("click", async () => {
+  if (!currentListing?.id || !isListingCreator(currentListing)) {
+    setBidMessage("You can only delete your own listings.", true);
+    return;
+  }
+
+  if (!window.confirm("Delete this listing permanently?")) {
+    return;
+  }
+
+  const token = localStorage.getItem(TOKEN_STORAGE_KEY);
+
+  if (!token) {
+    setBidMessage("Log in before deleting this listing.", true);
+    return;
+  }
+
+  try {
+    const apiKey = await getOrCreateApiKey(token);
+    await deleteRequest<void>(
+      `${API_BASE_URL}/${encodeURIComponent(currentListing.id)}`,
+      token,
+      apiKey,
+    );
+    window.location.href = "./profile.html";
+  } catch (error) {
+    setBidMessage(
+      error instanceof Error ? error.message : "Could not delete listing.",
       true,
     );
   }
