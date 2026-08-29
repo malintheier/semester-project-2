@@ -2,8 +2,8 @@ import { get } from "../api/get";
 import { createArtCard } from "../components/art-card";
 import type { ApiResponse, Listing } from "../types";
 
-const API_LISTINGS_URL =
-  "https://v2.api.noroff.dev/auction/listings?_active=true&_bids=true&_seller=true";
+const API_LISTINGS_URL = "https://v2.api.noroff.dev/auction/listings";
+const LISTINGS_PER_PAGE = 12;
 
 const listElementQuery =
   document.querySelector<HTMLUListElement>("#active-listings");
@@ -14,13 +14,20 @@ const searchElementQuery =
   document.querySelector<HTMLInputElement>("#listings-search");
 const categoryElementQuery =
   document.querySelector<HTMLSelectElement>("#listings-category");
+const loadMoreButtonQuery = document.querySelector<HTMLButtonElement>(
+  "#load-more-listings",
+);
 let allListings: Listing[] = [];
+let currentPage = 1;
+let hasMoreListings = true;
+let isLoading = false;
 
 if (
   !listElementQuery ||
   !statusElementQuery ||
   !searchElementQuery ||
-  !categoryElementQuery
+  !categoryElementQuery ||
+  !loadMoreButtonQuery
 ) {
   throw new Error("Listings markup is missing required elements.");
 }
@@ -29,6 +36,7 @@ const listElement = listElementQuery;
 const statusElement = statusElementQuery;
 const searchElement = searchElementQuery;
 const categoryElement = categoryElementQuery;
+const loadMoreButton = loadMoreButtonQuery;
 
 function setStatus(text: string, isError = false): void {
   statusElement.textContent = text;
@@ -99,12 +107,43 @@ function renderListings(listings: Listing[]): void {
   setStatus(`Showing ${listings.length} active listings.`);
 }
 
-async function loadActiveListings(): Promise<void> {
-  setStatus("Loading active listings...");
+function updateLoadMoreButton(): void {
+  loadMoreButton.classList.toggle("hidden", !hasMoreListings);
+  loadMoreButton.disabled = isLoading;
+  loadMoreButton.textContent = isLoading ? "Loading..." : "Load more";
+}
+
+function getListingsUrl(page: number): string {
+  const parameters = new URLSearchParams({
+    _active: "true",
+    _bids: "true",
+    _seller: "true",
+    limit: String(LISTINGS_PER_PAGE),
+    page: String(page),
+  });
+
+  return `${API_LISTINGS_URL}?${parameters.toString()}`;
+}
+
+async function loadActiveListings(loadMore = false): Promise<void> {
+  if (isLoading || (!loadMore && !hasMoreListings)) {
+    return;
+  }
+
+  isLoading = true;
+  updateLoadMoreButton();
+  setStatus(
+    loadMore ? "Loading more listings..." : "Loading active listings...",
+  );
 
   try {
-    const response = await get<ApiResponse<Listing[]>>(API_LISTINGS_URL);
-    allListings = Array.isArray(response.data) ? response.data : [];
+    const response = await get<ApiResponse<Listing[]>>(
+      getListingsUrl(currentPage),
+    );
+    const listings = Array.isArray(response.data) ? response.data : [];
+    allListings = loadMore ? [...allListings, ...listings] : listings;
+    hasMoreListings = listings.length === LISTINGS_PER_PAGE;
+    currentPage += 1;
     renderListings(filterListings(searchElement.value, categoryElement.value));
   } catch (error) {
     setStatus(
@@ -113,6 +152,9 @@ async function loadActiveListings(): Promise<void> {
         : "Could not load active listings.",
       true,
     );
+  } finally {
+    isLoading = false;
+    updateLoadMoreButton();
   }
 }
 
@@ -122,6 +164,10 @@ searchElement.addEventListener("input", () => {
 
 categoryElement.addEventListener("change", () => {
   renderListings(filterListings(searchElement.value, categoryElement.value));
+});
+
+loadMoreButton.addEventListener("click", () => {
+  loadActiveListings(true);
 });
 
 loadActiveListings();
