@@ -92,8 +92,7 @@ function renderListings(listings: Listing[]): void {
   const fragment = document.createDocumentFragment();
 
   listings.forEach((listing) => {
-    const index = allListings.indexOf(listing);
-    fragment.appendChild(createArtCard(listing, index));
+    fragment.appendChild(createArtCard(listing));
   });
 
   listElement.appendChild(fragment);

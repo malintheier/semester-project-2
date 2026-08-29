@@ -1,5 +1,9 @@
 import type { Listing } from "../types";
 
+const CATEGORIES = ["oil", "acrylic", "watercolor"] as const;
+
+type Category = (typeof CATEGORIES)[number];
+
 function getCurrentBid(listing: Listing): number {
   const bids = Array.isArray(listing.bids) ? listing.bids : [];
 
@@ -32,12 +36,20 @@ function getPrimaryImage(listing: Listing): { url: string; alt: string } {
   };
 }
 
-function getMedium(listing: Listing): string {
+function getCategory(listing: Listing): Category | null {
   const tags = Array.isArray(listing.tags) ? listing.tags : [];
-  return tags[0] || "Artwork";
+  const category = tags
+    .map((tag) => tag.toLowerCase())
+    .find((tag): tag is Category => CATEGORIES.includes(tag as Category));
+
+  return category || null;
 }
 
-export function createArtCard(listing: Listing, index: number): HTMLLIElement {
+function formatCategory(category: Category): string {
+  return `${category[0].toUpperCase()}${category.slice(1)}`;
+}
+
+export function createArtCard(listing: Listing): HTMLLIElement {
   const card = document.createElement("li");
   card.className = "art-card";
 
@@ -64,20 +76,21 @@ export function createArtCard(listing: Listing, index: number): HTMLLIElement {
   overlay.className = "art-card__overlay";
   overlay.setAttribute("aria-hidden", "true");
 
-  const number = document.createElement("span");
-  number.className = "art-card__number";
-  number.setAttribute("aria-hidden", "true");
-  number.textContent = String(index + 1).padStart(2, "0");
+  imageWrap.append(image, overlay);
 
-  const category = document.createElement("span");
-  category.className = "art-card__category";
-  category.textContent = getMedium(listing);
+  const listingCategory = getCategory(listing);
 
-  const medium = document.createElement("span");
-  medium.className = "art-card__medium";
-  medium.textContent = getMedium(listing);
+  if (listingCategory) {
+    const category = document.createElement("span");
+    category.className = "art-card__category";
+    category.textContent = formatCategory(listingCategory);
 
-  imageWrap.append(image, overlay, number, category, medium);
+    const medium = document.createElement("span");
+    medium.className = "art-card__medium";
+    medium.textContent = formatCategory(listingCategory);
+
+    imageWrap.append(category, medium);
+  }
 
   const details = document.createElement("div");
   details.className = "art-card__details";
