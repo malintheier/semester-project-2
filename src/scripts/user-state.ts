@@ -1,4 +1,6 @@
 import type { UserState } from "../types";
+import { renderHeader } from "../components/header";
+import "../styles/tailwind.css";
 
 export const TOKEN_STORAGE_KEY = "arthaus_access_token";
 export const API_KEY_STORAGE_KEY = "arthaus_api_key";
@@ -82,54 +84,17 @@ export function updateUserCredits(credits: number): void {
   });
 }
 
-function ensureCreditsElement(): HTMLSpanElement {
-  const existing = document.querySelector<HTMLSpanElement>(
-    "[data-user-credits]",
-  );
-
-  if (existing) {
-    return existing;
-  }
-
-  const wrapper = document.createElement("p");
-  wrapper.id = "global-credits";
-  wrapper.textContent = "Credits: ";
-
-  const value = document.createElement("span");
-  value.setAttribute("data-user-credits", "");
-  value.textContent = "0";
-  wrapper.appendChild(value);
-
-  const header = document.querySelector<HTMLElement>("header");
-
-  if (header) {
-    header.appendChild(wrapper);
-  } else {
-    document.body.prepend(wrapper);
-  }
-
-  return value;
-}
-
-function removeCreditsElement(): void {
-  document.querySelector("#global-credits")?.remove();
-}
-
-function renderCredits(): void {
-  if (!shouldRenderCreditsOnPage() || !isLoggedIn()) {
-    removeCreditsElement();
-    return;
-  }
-
-  ensureCreditsElement().textContent = String(getUserCredits());
+function renderAppHeader(): void {
+  const loggedIn = isLoggedIn();
+  renderHeader(loggedIn ? getUserState() : null, loggedIn);
 }
 
 window.addEventListener("storage", (event) => {
   if (event.key === USER_STORAGE_KEY || event.key === TOKEN_STORAGE_KEY) {
-    renderCredits();
+    renderAppHeader();
   }
 });
 
-window.addEventListener("arthaus:user-state-updated", renderCredits);
+window.addEventListener("arthaus:user-state-updated", renderAppHeader);
 
-renderCredits();
+renderAppHeader();

@@ -7,6 +7,7 @@ export interface UserState {
   name: string;
   email: string;
   credits: number;
+  avatarUrl?: string;
 }
 
 export interface MediaItem {

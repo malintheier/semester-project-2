@@ -166,6 +166,7 @@ form.addEventListener("submit", async (event) => {
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
+      avatarUrl: profile.avatar?.url,
     });
     setStatus("Profile saved.");
     window.setTimeout(() => {
