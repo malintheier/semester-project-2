@@ -11,3 +11,9 @@
   --color-line: #ccd1c7;
   --color-success: #228b4a;
 }
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}

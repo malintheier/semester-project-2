@@ -51,10 +51,10 @@ function formatCategory(category: Category): string {
 
 export function createArtCard(listing: Listing): HTMLLIElement {
   const card = document.createElement("li");
-  card.className = "art-card";
+  card.className = "min-w-0";
 
   const button = document.createElement("button");
-  button.className = "art-card__button";
+  button.className = "group w-full text-left";
   button.type = "button";
   button.setAttribute("aria-label", `View ${listing.title || "artwork"}`);
   button.addEventListener("click", () => {
@@ -63,17 +63,20 @@ export function createArtCard(listing: Listing): HTMLLIElement {
   });
 
   const imageWrap = document.createElement("div");
-  imageWrap.className = "art-card__image-wrap";
+  imageWrap.className =
+    "relative aspect-[3/4] overflow-hidden bg-stone-200 lg:aspect-[4/5]";
 
   const image = document.createElement("img");
   const primaryImage = getPrimaryImage(listing);
-  image.className = "art-card__image";
+  image.className =
+    "h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 group-focus-visible:scale-105";
   image.src = primaryImage.url;
   image.alt = primaryImage.alt;
   image.loading = "lazy";
 
   const overlay = document.createElement("div");
-  overlay.className = "art-card__overlay";
+  overlay.className =
+    "absolute inset-0 bg-gradient-to-t from-ink/80 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100";
   overlay.setAttribute("aria-hidden", "true");
 
   imageWrap.append(image, overlay);
@@ -82,36 +85,41 @@ export function createArtCard(listing: Listing): HTMLLIElement {
 
   if (listingCategory) {
     const category = document.createElement("span");
-    category.className = "art-card__category";
+    category.className =
+      "absolute right-3 top-3 bg-paper px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.15em] text-ink lg:right-4 lg:top-4 lg:px-3 lg:py-2 lg:text-xs lg:tracking-[0.2em]";
     category.textContent = formatCategory(listingCategory);
 
     const medium = document.createElement("span");
-    medium.className = "art-card__medium";
+    medium.className =
+      "absolute bottom-3 left-3 text-xs font-semibold uppercase tracking-[0.15em] text-paper opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 lg:bottom-4 lg:left-4";
     medium.textContent = formatCategory(listingCategory);
 
     imageWrap.append(category, medium);
   }
 
   const details = document.createElement("div");
-  details.className = "art-card__details";
+  details.className = "pt-3 lg:pt-4";
 
   const artist = document.createElement("p");
-  artist.className = "art-card__artist";
+  artist.className =
+    "text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink";
   artist.textContent = listing.seller?.name || "Arthaus artist";
 
   const title = document.createElement("h3");
-  title.className = "art-card__title";
+  title.className =
+    "mt-1 font-display text-sm font-bold italic sm:text-base lg:text-lg";
   title.textContent = listing.title || "Untitled artwork";
 
   const footer = document.createElement("div");
-  footer.className = "art-card__footer";
+  footer.className =
+    "mt-2 flex items-center justify-between gap-2 border-t border-line pt-2 text-xs font-bold lg:mt-3 lg:pt-3 lg:text-sm";
 
   const bid = document.createElement("span");
-  bid.className = "art-card__bid";
+  bid.className = "text-ink";
   bid.textContent = `${getCurrentBid(listing)} credits`;
 
   const live = document.createElement("span");
-  live.className = "art-card__live";
+  live.className = "text-right text-auction-red";
   live.textContent = formatDeadline(listing.endsAt);
 
   footer.append(bid, live);
