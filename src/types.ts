@@ -15,7 +15,12 @@ export interface MediaItem {
 }
 
 export interface Bid {
+  id?: string;
   amount?: number;
+  created?: string;
+  bidder?: {
+    name?: string;
+  };
 }
 
 export interface Listing {
@@ -28,6 +33,9 @@ export interface Listing {
   endsAt?: string;
   seller?: {
     name?: string;
+  };
+  _count?: {
+    bids?: number;
   };
 }
 

@@ -1,1 +1,0 @@
-import{r as e}from"./user-state-BW1Z2zAG.js";var t=`../../index.html`;document.querySelector(`#logout-button`)?.addEventListener(`click`,()=>{e(),window.location.href=t});
