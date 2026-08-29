@@ -47,6 +47,7 @@ function createLink(
 export function renderHeader(
   user: UserState | null,
   isLoggedIn: boolean,
+  onLogout: () => void,
 ): void {
   let header = document.querySelector<HTMLElement>("header");
 
@@ -81,7 +82,7 @@ export function renderHeader(
   if (isLoggedIn && user) {
     const credits = document.createElement("div");
     credits.className =
-      "flex items-center gap-1.5 border border-line bg-white px-2.5 py-1 text-xs font-semibold sm:gap-2 sm:px-3 sm:py-1.5";
+      "flex items-center gap-1.5 border border-line bg-card px-2.5 py-1 text-xs font-semibold sm:gap-2 sm:px-3 sm:py-1.5";
 
     const marker = document.createElement("span");
     marker.className = "text-auction-red";
@@ -113,7 +114,17 @@ export function renderHeader(
       profileLink.textContent = getInitials(user.name);
     }
 
-    actions.append(credits, profileLink);
+    const logoutButton = document.createElement("button");
+    logoutButton.className =
+      "hidden border border-line px-3 py-1.5 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink sm:block";
+    logoutButton.type = "button";
+    logoutButton.textContent = "<- Log out";
+    logoutButton.addEventListener("click", () => {
+      onLogout();
+      window.location.href = getPageUrl("home");
+    });
+
+    actions.append(credits, profileLink, logoutButton);
   } else {
     actions.append(createLink("Sign In", getPageUrl("login")));
   }

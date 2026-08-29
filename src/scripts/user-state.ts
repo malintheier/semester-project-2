@@ -82,7 +82,7 @@ export function updateUserCredits(credits: number): void {
 
 function renderAppHeader(): void {
   const loggedIn = isLoggedIn();
-  renderHeader(loggedIn ? getUserState() : null, loggedIn);
+  renderHeader(loggedIn ? getUserState() : null, loggedIn, clearUserState);
   renderFooter();
 }
 

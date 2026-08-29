@@ -34,6 +34,12 @@ const bidsElement = requireElement<HTMLOListElement>("#profile-bids");
 
 function setStatus(text: string, isError = false): void {
   statusElement.textContent = text;
+
+  if (!text) {
+    statusElement.className = "hidden";
+    return;
+  }
+
   statusElement.className = isError
     ? "mx-auto max-w-6xl px-4 pt-6 text-sm text-[#c0392b] sm:px-6 lg:px-10"
     : "mx-auto max-w-6xl px-4 pt-6 text-sm sm:px-6 lg:px-10";

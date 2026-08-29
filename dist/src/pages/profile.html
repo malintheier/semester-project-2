@@ -8,18 +8,18 @@
       content="View an Arthaus member profile, artwork and listings."
     />
     <title>Profile</title>
-    <script type="module" crossorigin src="/assets/profile-B0BBN6G9.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/user-state-DYVbqIVX.js">
+    <script type="module" crossorigin src="/assets/profile-C_PQVE8l.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/user-state-IiDGFXua.js">
     <link rel="modulepreload" crossorigin href="/assets/get-HmZ1QuMT.js">
     <link rel="modulepreload" crossorigin href="/assets/post-FXySHsi6.js">
-    <link rel="modulepreload" crossorigin href="/assets/api-key-CV34bPwX.js">
-    <link rel="stylesheet" crossorigin href="/assets/user-state-BN_z8Dy1.css">
+    <link rel="modulepreload" crossorigin href="/assets/api-key-DGAacPhc.js">
+    <link rel="stylesheet" crossorigin href="/assets/user-state-EB4r6iWG.css">
   </head>
   <body class="bg-paper font-sans text-ink">
     <main class="pb-24">
       <p
         id="profile-status"
-        class="mx-auto max-w-6xl px-4 pt-6 text-sm sm:px-6 lg:px-10"
+        class="hidden"
         role="status"
         aria-live="polite"
       ></p>
@@ -40,19 +40,12 @@
           >
             Profile
           </p>
-          <div class="absolute right-4 top-4 flex gap-3 sm:right-6 lg:right-10">
+          <div class="absolute right-4 top-4 sm:right-6 lg:right-10">
             <a
               class="bg-ink/70 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-paper"
               href="./edit-profile.html"
               >Edit Profile</a
             >
-            <button
-              id="logout-button"
-              class="bg-ink/70 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-paper"
-              type="button"
-            >
-              Log out
-            </button>
           </div>
         </section>
 
@@ -86,24 +79,25 @@
                 class="mt-4 max-w-lg font-display text-base italic text-muted-ink"
               ></p>
             </div>
-            <div class="shrink-0 border border-line bg-white px-4 py-3">
-              <p
-                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start">
+              <div class="shrink-0 border border-line bg-card px-4 py-3">
+                <p
+                  class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+                >
+                  Credits
+                </p>
+                <p
+                  id="profile-credits"
+                  class="mt-1 font-display text-xl font-black text-auction-red"
+                ></p>
+              </div>
+              <a
+                class="w-full bg-auction-red px-5 py-4 text-center text-sm font-semibold uppercase tracking-[0.2em] text-paper sm:w-auto"
+                href="./create-listing.html"
+                >+ Submit Work</a
               >
-                Credits
-              </p>
-              <p
-                id="profile-credits"
-                class="mt-1 font-display text-xl font-black text-auction-red"
-              ></p>
             </div>
           </div>
-
-          <a
-            class="mt-6 block w-full bg-auction-red px-5 py-4 text-center text-sm font-semibold uppercase tracking-[0.2em] text-white sm:mt-0 sm:inline-block sm:w-auto"
-            href="./create-listing.html"
-            >+ Submit Work</a
-          >
 
           <div class="mt-10 flex border-b border-line" role="tablist">
             <button
@@ -137,6 +131,6 @@
           </section>
         </div>
       </div>
-    </main>
+    </main>
   </body>
 </html>

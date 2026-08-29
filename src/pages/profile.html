@@ -13,7 +13,7 @@
     <main class="pb-24">
       <p
         id="profile-status"
-        class="mx-auto max-w-6xl px-4 pt-6 text-sm sm:px-6 lg:px-10"
+        class="hidden"
         role="status"
         aria-live="polite"
       ></p>
@@ -34,19 +34,12 @@
           >
             Profile
           </p>
-          <div class="absolute right-4 top-4 flex gap-3 sm:right-6 lg:right-10">
+          <div class="absolute right-4 top-4 sm:right-6 lg:right-10">
             <a
               class="bg-ink/70 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-paper"
               href="./edit-profile.html"
               >Edit Profile</a
             >
-            <button
-              id="logout-button"
-              class="bg-ink/70 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-paper"
-              type="button"
-            >
-              Log out
-            </button>
           </div>
         </section>
 
@@ -80,24 +73,25 @@
                 class="mt-4 max-w-lg font-display text-base italic text-muted-ink"
               ></p>
             </div>
-            <div class="shrink-0 border border-line bg-white px-4 py-3">
-              <p
-                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start">
+              <div class="shrink-0 border border-line bg-card px-4 py-3">
+                <p
+                  class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+                >
+                  Credits
+                </p>
+                <p
+                  id="profile-credits"
+                  class="mt-1 font-display text-xl font-black text-auction-red"
+                ></p>
+              </div>
+              <a
+                class="w-full bg-auction-red px-5 py-4 text-center text-sm font-semibold uppercase tracking-[0.2em] text-paper sm:w-auto"
+                href="./create-listing.html"
+                >+ Submit Work</a
               >
-                Credits
-              </p>
-              <p
-                id="profile-credits"
-                class="mt-1 font-display text-xl font-black text-auction-red"
-              ></p>
             </div>
           </div>
-
-          <a
-            class="mt-6 block w-full bg-auction-red px-5 py-4 text-center text-sm font-semibold uppercase tracking-[0.2em] text-white sm:mt-0 sm:inline-block sm:w-auto"
-            href="./create-listing.html"
-            >+ Submit Work</a
-          >
 
           <div class="mt-10 flex border-b border-line" role="tablist">
             <button
@@ -133,7 +127,6 @@
       </div>
     </main>
     <script type="module" src="../scripts/user-state.ts"></script>
-    <script type="module" src="../scripts/logout.ts"></script>
     <script type="module" src="../scripts/profile.ts"></script>
   </body>
 </html>
