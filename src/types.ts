@@ -7,6 +7,7 @@ export interface UserState {
   name: string;
   email: string;
   credits: number;
+  fullName?: string;
   avatarUrl?: string;
 }
 

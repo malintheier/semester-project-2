@@ -13,6 +13,15 @@
     <main>
       <h1>Create an account</h1>
       <form id="register-form" novalidate>
+        <label for="full-name">Full name</label>
+        <input
+          id="full-name"
+          name="full-name"
+          type="text"
+          required
+          minlength="2"
+        />
+
         <label for="name">Username</label>
         <input id="name" name="name" type="text" required minlength="2" />
 

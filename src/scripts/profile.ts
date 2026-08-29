@@ -227,6 +227,7 @@ async function loadProfile(): Promise<void> {
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
+      fullName: user.fullName,
       avatarUrl: profile.avatar?.url,
     });
     renderProfile(profile);

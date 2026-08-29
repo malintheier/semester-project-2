@@ -6,6 +6,7 @@ import "../styles/tailwind.css";
 export const TOKEN_STORAGE_KEY = "arthaus_access_token";
 export const API_KEY_STORAGE_KEY = "arthaus_api_key";
 export const USER_STORAGE_KEY = "arthaus_user";
+export const FULL_NAME_STORAGE_KEY = "arthaus_full_names";
 export const STARTING_CREDITS = 1000;
 
 function toNumber(value: unknown): number {
@@ -34,6 +35,30 @@ export function setUserState(user: UserState): void {
       detail: user,
     }),
   );
+}
+
+function getFullNameDirectory(): Record<string, string> {
+  const raw = localStorage.getItem(FULL_NAME_STORAGE_KEY);
+
+  if (!raw) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(raw) as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
+export function saveFullName(email: string, fullName: string): void {
+  const names = getFullNameDirectory();
+  names[email.toLowerCase()] = fullName;
+  localStorage.setItem(FULL_NAME_STORAGE_KEY, JSON.stringify(names));
+}
+
+export function getFullName(email: string): string | undefined {
+  return getFullNameDirectory()[email.toLowerCase()];
 }
 
 export function clearUserState(): void {
