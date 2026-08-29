@@ -1,0 +1,1 @@
+async function e(e,t,n){let r=new Headers({Accept:`application/json`,"Content-Type":`application/json`});n&&r.set(`Authorization`,`Bearer ${n}`);let i=await fetch(e,{method:`POST`,headers:r,body:JSON.stringify(t)});if(!i.ok)throw Error(`POST request failed with status ${i.status}`);return i.json()}export{e as t};

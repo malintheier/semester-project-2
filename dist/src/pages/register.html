@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Create an account and join the Arthaus art community."
+    />
+    <title>Register</title>
+    <script type="module" crossorigin src="/assets/register--kGjAkbd.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/user-state-BW1Z2zAG.js">
+    <link rel="modulepreload" crossorigin href="/assets/post-C2KW01ny.js">
+  </head>
+  <body>
+    <main>
+      <h1>Create an account</h1>
+      <form id="register-form" novalidate>
+        <label for="name">Username</label>
+        <input id="name" name="name" type="text" required minlength="2" />
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required />
+
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          required
+          minlength="8"
+        />
+
+        <button type="submit">Register</button>
+      </form>
+      <p id="register-message" role="status" aria-live="polite"></p>
+    </main>
+  </body>
+</html>

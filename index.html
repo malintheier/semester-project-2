@@ -8,6 +8,7 @@
       content="Discover and share unique artwork on Arthaus."
     />
     <title>Home</title>
+    <link rel="stylesheet" href="./src/styles/art-card.css" />
   </head>
   <body>
     <header>
@@ -32,11 +33,11 @@
           <option value="watercolor">Watercolor</option>
         </select>
         <p id="active-listings-status" role="status" aria-live="polite"></p>
-        <ul id="active-listings"></ul>
+        <ul id="active-listings" class="art-grid"></ul>
       </section>
     </main>
     <footer></footer>
-    <script type="module" src="./src/scripts/user-state.js"></script>
-    <script type="module" src="./src/scripts/listings.js"></script>
+    <script type="module" src="./src/scripts/user-state.ts"></script>
+    <script type="module" src="./src/scripts/listings.ts"></script>
   </body>
 </html>

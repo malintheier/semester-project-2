@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Discover and share unique artwork on Arthaus."
+    />
+    <title>Home</title>
+    <script type="module" crossorigin src="/assets/home-DMzTsKJl.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/user-state-BW1Z2zAG.js">
+    <link rel="stylesheet" crossorigin href="/assets/home-ujRCfaRM.css">
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Main navigation"></nav>
+    </header>
+    <main>
+      <h1>Discover artwork</h1>
+      <section aria-labelledby="active-listings-heading">
+        <h2 id="active-listings-heading">Active listings</h2>
+        <label for="listings-search">Search listings</label>
+        <input
+          id="listings-search"
+          name="listings-search"
+          type="search"
+          placeholder="Search by title or keyword"
+        />
+        <label for="listings-category">Category</label>
+        <select id="listings-category" name="listings-category">
+          <option value="all">All</option>
+          <option value="oil">Oil</option>
+          <option value="acrylic">Acrylic</option>
+          <option value="watercolor">Watercolor</option>
+        </select>
+        <p id="active-listings-status" role="status" aria-live="polite"></p>
+        <ul id="active-listings" class="art-grid"></ul>
+      </section>
+    </main>
+    <footer></footer>
+  </body>
+</html>
