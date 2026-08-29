@@ -8,11 +8,11 @@
       content="Place a bid on an artwork auction on Arthaus."
     />
     <title>Place Bid</title>
-    <script type="module" crossorigin src="/assets/placeBid-Pp-aVuK2.js"></script>
+    <script type="module" crossorigin src="/assets/placeBid-DZyKhLMy.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/user-state-CRLb4NFK.js">
     <link rel="modulepreload" crossorigin href="/assets/get-C83S1kSV.js">
     <link rel="modulepreload" crossorigin href="/assets/post-C2KW01ny.js">
-    <link rel="stylesheet" crossorigin href="/assets/placeBid-DDAwCkj8.css">
+    <link rel="stylesheet" crossorigin href="/assets/placeBid-CU10LN_4.css">
   </head>
   <body class="bg-paper font-sans text-ink">
     <main class="mx-auto max-w-7xl px-4 pb-24 pt-0 sm:px-6 lg:px-10 lg:py-20">
@@ -23,9 +23,17 @@
         &lt;- Back to Browse
       </a>
 
-      <p id="listing-status" class="mt-6 text-sm" role="status" aria-live="polite"></p>
+      <p
+        id="listing-status"
+        class="mt-6 text-sm"
+        role="status"
+        aria-live="polite"
+      ></p>
 
-      <div id="listing-content" class="hidden lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-16 xl:gap-24">
+      <div
+        id="listing-content"
+        class="hidden lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-16 xl:gap-24"
+      >
         <section class="min-w-0">
           <div class="relative aspect-[4/5] overflow-hidden bg-stone-200">
             <img
@@ -43,46 +51,171 @@
           <div id="thumbnail-strip" class="mt-3 flex gap-3"></div>
 
           <section class="mt-10">
-            <h2 class="font-display text-2xl font-bold italic">About the Work</h2>
-            <p id="listing-description" class="mt-4 max-w-2xl leading-7 text-muted-ink"></p>
+            <h2 class="font-display text-2xl font-bold italic">
+              About the Work
+            </h2>
+            <p
+              id="listing-description"
+              class="mt-4 max-w-2xl leading-7 text-muted-ink"
+            ></p>
           </section>
 
           <dl class="mt-10 grid grid-cols-2 border-t border-line">
-            <div class="border-b border-line py-4"><dt class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink">Artist</dt><dd id="detail-artist" class="mt-1"></dd></div>
-            <div class="border-b border-line py-4"><dt class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink">Medium</dt><dd id="detail-medium" class="mt-1"></dd></div>
-            <div class="border-b border-line py-4"><dt class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink">Deadline</dt><dd id="detail-deadline" class="mt-1"></dd></div>
-            <div class="border-b border-line py-4"><dt class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink">Bids</dt><dd id="detail-bids" class="mt-1"></dd></div>
+            <div class="border-b border-line py-4">
+              <dt
+                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+              >
+                Artist
+              </dt>
+              <dd id="detail-artist" class="mt-1"></dd>
+            </div>
+            <div class="border-b border-line py-4">
+              <dt
+                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+              >
+                Medium
+              </dt>
+              <dd id="detail-medium" class="mt-1"></dd>
+            </div>
+            <div class="border-b border-line py-4">
+              <dt
+                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+              >
+                Deadline
+              </dt>
+              <dd id="detail-deadline" class="mt-1"></dd>
+            </div>
+            <div class="border-b border-line py-4">
+              <dt
+                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+              >
+                Bids
+              </dt>
+              <dd id="detail-bids" class="mt-1"></dd>
+            </div>
           </dl>
         </section>
 
         <aside class="mt-8 lg:sticky lg:top-24 lg:mt-0 lg:self-start">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-auction-red">Live Auction</p>
-          <h1 id="listing-title" class="mt-3 font-display text-3xl font-black italic leading-tight sm:text-4xl"></h1>
-          <p id="listing-artist" class="mt-3 font-display text-lg italic text-muted-ink"></p>
+          <p
+            class="text-xs font-semibold uppercase tracking-[0.2em] text-auction-red"
+          >
+            Live Auction
+          </p>
+          <h1
+            id="listing-title"
+            class="mt-3 font-display text-3xl font-black italic leading-tight sm:text-4xl"
+          ></h1>
+          <p
+            id="listing-artist"
+            class="mt-3 font-display text-lg italic text-muted-ink"
+          ></p>
 
-          <div class="mt-8 grid grid-cols-4 divide-x divide-white/10 bg-ink p-4 text-paper">
-            <div class="text-center"><span id="countdown-days" class="block font-display text-2xl font-black">00</span><span class="text-[10px] uppercase tracking-[0.15em] text-paper/60">Days</span></div>
-            <div class="text-center"><span id="countdown-hours" class="block font-display text-2xl font-black">00</span><span class="text-[10px] uppercase tracking-[0.15em] text-paper/60">Hours</span></div>
-            <div class="text-center"><span id="countdown-minutes" class="block font-display text-2xl font-black">00</span><span class="text-[10px] uppercase tracking-[0.15em] text-paper/60">Mins</span></div>
-            <div class="text-center"><span id="countdown-seconds" class="block font-display text-2xl font-black">00</span><span class="text-[10px] uppercase tracking-[0.15em] text-paper/60">Secs</span></div>
+          <div
+            class="mt-8 grid grid-cols-4 divide-x divide-white/10 bg-ink p-4 text-paper"
+          >
+            <div class="text-center">
+              <span
+                id="countdown-days"
+                class="block font-display text-2xl font-black"
+                >00</span
+              ><span
+                class="text-[10px] uppercase tracking-[0.15em] text-paper/60"
+                >Days</span
+              >
+            </div>
+            <div class="text-center">
+              <span
+                id="countdown-hours"
+                class="block font-display text-2xl font-black"
+                >00</span
+              ><span
+                class="text-[10px] uppercase tracking-[0.15em] text-paper/60"
+                >Hours</span
+              >
+            </div>
+            <div class="text-center">
+              <span
+                id="countdown-minutes"
+                class="block font-display text-2xl font-black"
+                >00</span
+              ><span
+                class="text-[10px] uppercase tracking-[0.15em] text-paper/60"
+                >Mins</span
+              >
+            </div>
+            <div class="text-center">
+              <span
+                id="countdown-seconds"
+                class="block font-display text-2xl font-black"
+                >00</span
+              ><span
+                class="text-[10px] uppercase tracking-[0.15em] text-paper/60"
+                >Secs</span
+              >
+            </div>
           </div>
 
           <div class="mt-8 flex items-end justify-between gap-4">
-            <div><p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-ink">Current bid</p><p id="current-bid" class="mt-1 font-display text-4xl font-black">0</p></div>
-            <p class="pb-1 text-right text-sm text-muted-ink">Your credits<br /><span id="your-credits" class="font-semibold text-ink">0</span></p>
+            <div>
+              <p
+                class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-ink"
+              >
+                Current bid
+              </p>
+              <p id="current-bid" class="mt-1 font-display text-4xl font-black">
+                0
+              </p>
+            </div>
+            <p class="pb-1 text-right text-sm text-muted-ink">
+              Your credits<br /><span
+                id="your-credits"
+                class="font-semibold text-ink"
+                >0</span
+              >
+            </p>
           </div>
 
-          <p id="bid-message" class="mt-6 hidden border border-success bg-success/10 px-4 py-3 text-sm text-success" role="status" aria-live="polite"></p>
+          <p
+            id="bid-message"
+            class="mt-6 hidden border border-success bg-success/10 px-4 py-3 text-sm text-success"
+            role="status"
+            aria-live="polite"
+          ></p>
 
           <form id="bid-form" class="mt-6">
-            <label class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-ink" for="bid-amount">Your bid</label>
-            <input id="bid-amount" class="mt-2 w-full border border-line bg-white px-4 py-4 text-lg outline-none" name="amount" type="number" min="1" step="1" required />
-            <button class="mt-3 w-full bg-auction-red px-5 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-white" type="submit">Place Bid</button>
+            <label
+              class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-ink"
+              for="bid-amount"
+              >Your bid</label
+            >
+            <input
+              id="bid-amount"
+              class="mt-2 w-full border border-line bg-white px-4 py-4 text-lg outline-none"
+              name="amount"
+              type="number"
+              min="1"
+              step="1"
+              required
+            />
+            <button
+              class="mt-3 w-full bg-auction-red px-5 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-white"
+              type="submit"
+            >
+              Place Bid
+            </button>
           </form>
-          <p class="mt-3 text-xs leading-5 text-muted-ink">Bids are binding. Please check your amount before placing a bid.</p>
+          <p class="mt-3 text-xs leading-5 text-muted-ink">
+            Bids are binding. Please check your amount before placing a bid.
+          </p>
 
           <section class="mt-10" aria-labelledby="bid-history-heading">
-            <h2 id="bid-history-heading" class="font-display text-2xl font-bold italic">Bid History</h2>
+            <h2
+              id="bid-history-heading"
+              class="font-display text-2xl font-bold italic"
+            >
+              Bid History
+            </h2>
             <ol id="bid-history" class="mt-4"></ol>
           </section>
         </aside>

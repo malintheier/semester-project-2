@@ -127,6 +127,19 @@ function renderMedia(listing: Listing): void {
   });
 }
 
+function formatBidTimestamp(created?: string): string {
+  const date = new Date(created || "");
+
+  if (Number.isNaN(date.getTime())) {
+    return "Time unknown";
+  }
+
+  return date.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
+
 function renderBidHistory(bids: Bid[]): void {
   bidHistoryElement.innerHTML = "";
 
@@ -140,21 +153,33 @@ function renderBidHistory(bids: Bid[]): void {
 
   [...bids]
     .sort(
-      (first, second) => Number(second.amount || 0) - Number(first.amount || 0),
+      (first, second) =>
+        new Date(second.created || "").getTime() -
+        new Date(first.created || "").getTime(),
     )
     .forEach((bid) => {
       const item = document.createElement("li");
       item.className =
         "flex items-center justify-between gap-4 border-b border-line py-3 text-sm";
 
+      const bidderDetails = document.createElement("div");
+
       const bidder = document.createElement("span");
+      bidder.className = "block font-medium";
       bidder.textContent = bid.bidder?.name || "Anonymous bidder";
+
+      const timestamp = document.createElement("time");
+      timestamp.className = "mt-1 block text-xs text-muted-ink";
+      timestamp.dateTime = bid.created || "";
+      timestamp.textContent = formatBidTimestamp(bid.created);
+
+      bidderDetails.append(bidder, timestamp);
 
       const amount = document.createElement("span");
       amount.className = "font-semibold";
       amount.textContent = `${Number(bid.amount || 0)} credits`;
 
-      item.append(bidder, amount);
+      item.append(bidderDetails, amount);
       bidHistoryElement.appendChild(item);
     });
 }
