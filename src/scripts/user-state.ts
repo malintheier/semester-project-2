@@ -1,4 +1,5 @@
 import type { UserState } from "../types";
+import { renderFooter } from "../components/footer";
 import { renderHeader } from "../components/header";
 import "../styles/tailwind.css";
 
@@ -56,11 +57,6 @@ function isLoggedIn(): boolean {
   return Boolean(token && hasIdentity);
 }
 
-function shouldRenderCreditsOnPage(): boolean {
-  const path = window.location.pathname.toLowerCase();
-  return !path.endsWith("/login.html") && !path.endsWith("/register.html");
-}
-
 export function getUserCredits(): number {
   const user = getUserState();
 
@@ -87,6 +83,7 @@ export function updateUserCredits(credits: number): void {
 function renderAppHeader(): void {
   const loggedIn = isLoggedIn();
   renderHeader(loggedIn ? getUserState() : null, loggedIn);
+  renderFooter();
 }
 
 window.addEventListener("storage", (event) => {
