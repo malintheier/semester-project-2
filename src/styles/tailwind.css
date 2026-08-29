@@ -4,11 +4,17 @@
 @theme {
   --font-sans: "Outfit", sans-serif;
   --font-display: "Playfair Display", serif;
-  --color-paper: #f7f4ee;
-  --color-ink: #172018;
-  --color-muted-ink: #6d746c;
+  --color-paper: #f4efe6;
+  --color-ink: #0d0c0a;
+  --color-card: #ede8dc;
+  --color-card-foreground: #0d0c0a;
+  --color-secondary: #e6dfd0;
+  --color-secondary-foreground: #0d0c0a;
+  --color-muted: #ddd7c8;
+  --color-muted-ink: #6b6050;
   --color-auction-red: #c8301a;
-  --color-line: #ccd1c7;
+  --color-line: #c2b9a4;
+  --color-ring: #c8301a;
   --color-success: #228b4a;
 }
 
