@@ -3,6 +3,7 @@ import type { ApiResponse, LoginBody, LoginResponse } from "../types";
 import { getOrCreateApiKey } from "./api-key";
 import {
   STARTING_CREDITS,
+  getCustomAvatar,
   getFullName,
   TOKEN_STORAGE_KEY,
   setUserState,
@@ -76,6 +77,7 @@ form.addEventListener("submit", async (event: SubmitEvent) => {
       email: response.data.email || email,
       credits: Number(response.data.credits ?? STARTING_CREDITS),
       fullName: getFullName(response.data.email || email),
+      customAvatarUrl: getCustomAvatar(response.data.email || email),
     });
 
     form.classList.add("hidden");

@@ -7,6 +7,7 @@ export const TOKEN_STORAGE_KEY = "arthaus_access_token";
 export const API_KEY_STORAGE_KEY = "arthaus_api_key";
 export const USER_STORAGE_KEY = "arthaus_user";
 export const FULL_NAME_STORAGE_KEY = "arthaus_full_names";
+export const CUSTOM_AVATAR_STORAGE_KEY = "arthaus_custom_avatars";
 export const STARTING_CREDITS = 1000;
 
 function toNumber(value: unknown): number {
@@ -59,6 +60,30 @@ export function saveFullName(email: string, fullName: string): void {
 
 export function getFullName(email: string): string | undefined {
   return getFullNameDirectory()[email.toLowerCase()];
+}
+
+function getCustomAvatarDirectory(): Record<string, string> {
+  const raw = localStorage.getItem(CUSTOM_AVATAR_STORAGE_KEY);
+
+  if (!raw) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(raw) as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
+export function saveCustomAvatar(email: string, avatarUrl: string): void {
+  const avatars = getCustomAvatarDirectory();
+  avatars[email.toLowerCase()] = avatarUrl;
+  localStorage.setItem(CUSTOM_AVATAR_STORAGE_KEY, JSON.stringify(avatars));
+}
+
+export function getCustomAvatar(email: string): string | undefined {
+  return getCustomAvatarDirectory()[email.toLowerCase()];
 }
 
 export function clearUserState(): void {

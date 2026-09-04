@@ -34,7 +34,12 @@
             <p class="mt-1 text-sm text-muted-ink">Redirecting...</p>
           </div>
 
-          <form id="register-form" class="space-y-5" novalidate>
+          <form
+            id="register-form"
+            class="space-y-5"
+            novalidate
+            autocomplete="off"
+          >
             <div>
               <label
                 class="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-ink"
@@ -47,6 +52,7 @@
                 name="full-name"
                 type="text"
                 placeholder="Jane Hopper"
+                autocomplete="name"
                 required
                 minlength="2"
               />
@@ -55,15 +61,16 @@
             <div>
               <label
                 class="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-ink"
-                for="name"
+                for="username"
                 >Username</label
               >
               <input
-                id="name"
+                id="username"
                 class="w-full border border-line bg-paper px-4 py-3 text-sm outline-none focus:border-ink"
-                name="name"
+                name="username"
                 type="text"
                 placeholder="jane_hopper"
+                autocomplete="off"
                 required
                 minlength="2"
               />
@@ -81,6 +88,7 @@
                 name="email"
                 type="email"
                 placeholder="you@stud.noroff.no"
+                autocomplete="email"
                 required
               />
               <p class="mt-2 text-xs text-muted-ink">
@@ -100,6 +108,7 @@
                 name="password"
                 type="password"
                 placeholder="Password"
+                autocomplete="new-password"
                 required
                 minlength="8"
               />

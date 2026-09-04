@@ -100,9 +100,10 @@ export function createArtCard(listing: Listing): HTMLLIElement {
   const details = document.createElement("div");
   details.className = "pt-3 lg:pt-4";
 
-  const artist = document.createElement("p");
+  const artist = document.createElement("a");
   artist.className =
-    "text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink";
+    "cursor-pointer text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink hover:text-ink";
+  artist.href = `./src/pages/public-profile.html?name=${encodeURIComponent(listing.seller?.name || "")}`;
   artist.textContent = listing.seller?.name || "Arthaus artist";
 
   const title = document.createElement("h3");
@@ -123,9 +124,9 @@ export function createArtCard(listing: Listing): HTMLLIElement {
   live.textContent = formatDeadline(listing.endsAt);
 
   footer.append(bid, live);
-  details.append(artist, title, footer);
-  button.append(imageWrap, details);
-  card.appendChild(button);
+  button.append(imageWrap, title, footer);
+  details.append(artist, button);
+  card.appendChild(details);
 
   return card;
 }

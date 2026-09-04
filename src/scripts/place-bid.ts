@@ -32,7 +32,7 @@ const imageElement = requireElement<HTMLImageElement>("#listing-image");
 const categoryElement = requireElement<HTMLSpanElement>("#listing-category");
 const thumbnailElement = requireElement<HTMLDivElement>("#thumbnail-strip");
 const titleElement = requireElement<HTMLHeadingElement>("#listing-title");
-const artistElement = requireElement<HTMLParagraphElement>("#listing-artist");
+const artistElement = requireElement<HTMLAnchorElement>("#listing-artist");
 const descriptionElement = requireElement<HTMLParagraphElement>(
   "#listing-description",
 );
@@ -40,6 +40,7 @@ const detailArtistElement = requireElement<HTMLElement>("#detail-artist");
 const detailMediumElement = requireElement<HTMLElement>("#detail-medium");
 const detailDimensionsElement =
   requireElement<HTMLElement>("#detail-dimensions");
+const detailSurfaceElement = requireElement<HTMLElement>("#detail-surface");
 const detailDeadlineElement = requireElement<HTMLElement>("#detail-deadline");
 const detailBidsElement = requireElement<HTMLElement>("#detail-bids");
 const currentBidElement = requireElement<HTMLParagraphElement>("#current-bid");
@@ -123,6 +124,10 @@ function formatDate(value?: string): string {
 
 function formatCategory(category: string): string {
   return `${category[0].toUpperCase()}${category.slice(1)}`;
+}
+
+function capitalize(value: string): string {
+  return `${value[0].toUpperCase()}${value.slice(1)}`;
 }
 
 function isListingCreator(listing: Listing): boolean {
@@ -268,6 +273,7 @@ function renderListing(listing: Listing): void {
 
   titleElement.textContent = listing.title || "Untitled artwork";
   artistElement.textContent = listing.seller?.name || "Arthaus artist";
+  artistElement.href = `./public-profile.html?name=${encodeURIComponent(listing.seller?.name || "")}`;
   descriptionElement.textContent =
     listing.description || "No description has been provided.";
   detailArtistElement.textContent = listing.seller?.name || "Unknown";
@@ -275,8 +281,12 @@ function renderListing(listing: Listing): void {
     ? formatCategory(category)
     : "Not specified";
   const dimensions = getTagValue(listing, "dimensions");
+  const surface = getTagValue(listing, "surface");
   detailDimensionsElement.textContent = dimensions
     ? `${dimensions} cm`
+    : "Not specified";
+  detailSurfaceElement.textContent = surface
+    ? capitalize(surface)
     : "Not specified";
   detailDeadlineElement.textContent = formatDate(listing.endsAt);
   detailBidsElement.textContent = String(

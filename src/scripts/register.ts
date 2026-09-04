@@ -34,7 +34,7 @@ form.addEventListener("submit", async (event: SubmitEvent) => {
 
   const formData = new FormData(form);
   const fullName = String(formData.get("full-name") || "").trim();
-  const name = String(formData.get("name") || "").trim();
+  const name = String(formData.get("username") || "").trim();
   const email = String(formData.get("email") || "").trim();
   const password = String(formData.get("password") || "");
 

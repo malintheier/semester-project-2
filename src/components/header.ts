@@ -74,7 +74,11 @@ export function renderHeader(
   navigation.setAttribute("aria-label", "Main navigation");
   navigation.append(
     createLink("Browse", getPageUrl("home"), isCurrentPage("home")),
-    createLink("Submit Work", getPageUrl("create"), isCurrentPage("create")),
+    createLink(
+      "Submit Work",
+      isLoggedIn ? getPageUrl("create") : getPageUrl("login"),
+      isLoggedIn && isCurrentPage("create"),
+    ),
   );
 
   const actions = document.createElement("div");
@@ -101,7 +105,19 @@ export function renderHeader(
     profileLink.href = getPageUrl("profile");
     profileLink.setAttribute("aria-label", "My profile");
 
-    profileLink.textContent = getInitials(user.fullName || user.name);
+    if (user.customAvatarUrl) {
+      const avatar = document.createElement("img");
+      avatar.className = "h-full w-full object-cover";
+      avatar.src = user.customAvatarUrl;
+      avatar.alt = user.fullName || user.name;
+      avatar.addEventListener("error", () => {
+        avatar.remove();
+        profileLink.textContent = getInitials(user.fullName || user.name);
+      });
+      profileLink.appendChild(avatar);
+    } else {
+      profileLink.textContent = getInitials(user.fullName || user.name);
+    }
 
     const logoutButton = document.createElement("button");
     logoutButton.className =

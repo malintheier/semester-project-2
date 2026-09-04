@@ -206,4 +206,10 @@ form.addEventListener("submit", async (event) => {
 });
 
 const user = getUserState();
-artistElement.value = user?.name || "";
+const token = localStorage.getItem(TOKEN_STORAGE_KEY);
+
+if (!user || !token) {
+  window.location.href = "./login.html";
+} else {
+  artistElement.value = user.name;
+}

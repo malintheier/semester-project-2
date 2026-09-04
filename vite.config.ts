@@ -12,6 +12,7 @@ export default defineConfig({
         login: "src/pages/login.html",
         placeBid: "src/pages/place-bid.html",
         profile: "src/pages/profile.html",
+        publicProfile: "src/pages/public-profile.html",
         register: "src/pages/register.html",
       },
     },

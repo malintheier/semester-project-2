@@ -2,7 +2,12 @@ import { get } from "../api/get";
 import { put } from "../api/put";
 import type { ApiResponse, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
-import { getUserState, setUserState, TOKEN_STORAGE_KEY } from "./user-state";
+import {
+  getUserState,
+  saveCustomAvatar,
+  setUserState,
+  TOKEN_STORAGE_KEY,
+} from "./user-state";
 import "../styles/tailwind.css";
 
 const API_BASE_URL = "https://v2.api.noroff.dev/auction/profiles";
@@ -34,6 +39,7 @@ const bannerPreviewElement =
   requireElement<HTMLImageElement>("#banner-preview");
 
 let profile: Profile | null = null;
+let initialAvatarUrl = "";
 
 function setStatus(text: string, isError = false): void {
   statusElement.textContent = text;
@@ -82,6 +88,7 @@ function populateForm(data: Profile): void {
   displayNameElement.value = data.name;
   bioElement.value = data.bio || "";
   avatarUrlElement.value = data.avatar?.url || "";
+  initialAvatarUrl = avatarUrlElement.value;
   bannerUrlElement.value = data.banner?.url || "";
   avatarInitialsElement.textContent = getInitials(data.name);
   updateAvatarPreview();
@@ -162,12 +169,20 @@ form.addEventListener("submit", async (event) => {
     );
 
     profile = response.data;
+    const avatarWasChanged = avatarUrl !== initialAvatarUrl;
+
+    if (avatarWasChanged && avatarUrl) {
+      saveCustomAvatar(profile.email, avatarUrl);
+    }
+
     setUserState({
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
       fullName: getUserState()?.fullName,
-      avatarUrl: profile.avatar?.url,
+      customAvatarUrl: avatarWasChanged
+        ? avatarUrl || undefined
+        : getUserState()?.customAvatarUrl,
     });
     setStatus("Profile saved.");
     window.setTimeout(() => {

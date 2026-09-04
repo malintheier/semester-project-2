@@ -8,7 +8,7 @@ export interface UserState {
   email: string;
   credits: number;
   fullName?: string;
-  avatarUrl?: string;
+  customAvatarUrl?: string;
 }
 
 export interface MediaItem {

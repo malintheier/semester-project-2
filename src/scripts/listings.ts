@@ -122,6 +122,10 @@ function formatDeadline(endsAt?: string): string {
   return Number.isNaN(date.getTime()) ? "Unknown" : date.toLocaleDateString();
 }
 
+function capitalize(value: string): string {
+  return `${value[0].toUpperCase()}${value.slice(1)}`;
+}
+
 function filterAndSortListings(): Listing[] {
   const query = searchElement.value;
   const normalizedQuery = query.trim().toLowerCase();
@@ -158,7 +162,9 @@ function renderFeatured(listing: Listing): void {
   featuredImage.alt = image?.alt || listing.title || "Featured artwork";
   featuredTitle.textContent = listing.title || "Untitled artwork";
   featuredArtist.textContent = listing.seller?.name || "Arthaus artist";
-  featuredMedium.textContent = category || "Contemporary artwork";
+  featuredMedium.textContent = category
+    ? capitalize(category)
+    : "Contemporary artwork";
   featuredBid.textContent = `${getCurrentBid(listing)} credits`;
   featuredBids.textContent = String(
     listing._count?.bids ?? listing.bids?.length ?? 0,
