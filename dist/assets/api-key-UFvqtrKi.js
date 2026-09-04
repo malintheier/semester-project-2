@@ -1,1 +1,0 @@
-import{t as e}from"./user-state-D57L5X-h.js";import{t}from"./post-DBsons9j.js";var n=`https://v2.api.noroff.dev/auth/create-api-key`;async function r(r){let i=localStorage.getItem(e);if(i)return i;let a=(await t(n,{name:`Arthaus`},r)).data.key;if(!a)throw Error(`API key is missing from the response.`);return localStorage.setItem(e,a),a}export{r as t};
