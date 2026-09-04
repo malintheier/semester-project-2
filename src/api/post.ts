@@ -24,7 +24,25 @@ export async function post<TResponse, TBody>(
   });
 
   if (!response.ok) {
-    throw new Error(`POST request failed with status ${response.status}`);
+    const errorResponse = (await response.json().catch(() => null)) as {
+      errors?: Array<{ message?: string; path?: string[] }>;
+      message?: string;
+      status?: string;
+    } | null;
+    const messages = errorResponse?.errors
+      ?.map((error) => {
+        const path = error.path?.join(".");
+        return error.message
+          ? `${path ? `${path}: ` : ""}${error.message}`
+          : "";
+      })
+      .filter(Boolean);
+    const message =
+      messages?.join(" ") || errorResponse?.message || errorResponse?.status;
+
+    throw new Error(
+      message || `POST request failed with status ${response.status}`,
+    );
   }
 
   return response.json() as Promise<TResponse>;

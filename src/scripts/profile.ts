@@ -71,22 +71,25 @@ function getHighestBid(listing?: Listing): number {
 }
 
 function renderProfile(profile: Profile): void {
-  nameElement.textContent = profile.name;
-  metaElement.textContent = profile.email;
+  const user = getUserState();
+  const displayName = user?.fullName || profile.name;
+
+  nameElement.textContent = displayName;
+  metaElement.textContent = `@${profile.name}`;
   bioElement.textContent = profile.bio || "No bio added yet.";
   creditsElement.textContent = String(profile.credits ?? 0);
-  initialsElement.textContent = getInitials(profile.name);
+  initialsElement.textContent = getInitials(displayName);
 
   if (profile.avatar?.url) {
     avatarElement.src = profile.avatar.url;
-    avatarElement.alt = profile.avatar.alt || `${profile.name}'s avatar`;
+    avatarElement.alt = profile.avatar.alt || `${displayName}'s avatar`;
     avatarElement.classList.remove("hidden");
     initialsElement.classList.add("hidden");
   }
 
   if (profile.banner?.url) {
     bannerElement.src = profile.banner.url;
-    bannerElement.alt = profile.banner.alt || `${profile.name}'s banner`;
+    bannerElement.alt = profile.banner.alt || `${displayName}'s banner`;
     bannerElement.classList.remove("hidden");
   }
 }

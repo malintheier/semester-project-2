@@ -8,36 +8,127 @@
       content="Create an account and join the Arthaus art community."
     />
     <title>Register</title>
-    <script type="module" crossorigin src="/assets/register-CC_mPzg1.js"></script>
+    <script type="module" crossorigin src="/assets/register-C2Nlrz5Y.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/user-state-DhSBwa_0.js">
-    <link rel="modulepreload" crossorigin href="/assets/post-FXySHsi6.js">
+    <link rel="modulepreload" crossorigin href="/assets/post-DBsons9j.js">
     <link rel="stylesheet" crossorigin href="/assets/user-state-EB4r6iWG.css">
   </head>
-  <body>
-    <main>
-      <h1>Create an account</h1>
-      <form id="register-form" novalidate>
-        <label for="full-name">Full name</label>
-        <input id="full-name" name="full-name" type="text" required minlength="2" />
+  <body class="bg-paper font-sans text-ink">
+    <main
+      class="flex min-h-[80vh] items-center justify-center px-4 py-20 sm:px-6"
+    >
+      <div class="w-full max-w-md">
+        <div class="mb-12 text-center">
+          <h1 class="mb-3 font-display text-5xl font-black italic">Join Us</h1>
+          <p class="text-sm text-muted-ink">
+            Create an account to start bidding and selling
+          </p>
+        </div>
 
-        <label for="name">Username</label>
-        <input id="name" name="name" type="text" required minlength="2" />
+        <div class="border border-line bg-card p-8 lg:p-10">
+          <div id="register-success" class="hidden py-8 text-center">
+            <div
+              class="mx-auto mb-4 flex h-12 w-12 items-center justify-center bg-success text-2xl text-paper"
+            >
+              &check;
+            </div>
+            <p class="font-display text-base font-bold italic">
+              Account created.
+            </p>
+            <p class="mt-1 text-sm text-muted-ink">Redirecting...</p>
+          </div>
 
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" required />
+          <form id="register-form" class="space-y-5" novalidate>
+            <div>
+              <label
+                class="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-ink"
+                for="full-name"
+                >Full Name</label
+              >
+              <input
+                id="full-name"
+                class="w-full border border-line bg-paper px-4 py-3 text-sm outline-none focus:border-ink"
+                name="full-name"
+                type="text"
+                placeholder="Jane Hopper"
+                required
+                minlength="2"
+              />
+            </div>
 
-        <label for="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          minlength="8"
-        />
+            <div>
+              <label
+                class="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-ink"
+                for="name"
+                >Username</label
+              >
+              <input
+                id="name"
+                class="w-full border border-line bg-paper px-4 py-3 text-sm outline-none focus:border-ink"
+                name="name"
+                type="text"
+                placeholder="jane_hopper"
+                required
+                minlength="2"
+              />
+            </div>
 
-        <button type="submit">Register</button>
-      </form>
-      <p id="register-message" role="status" aria-live="polite"></p>
+            <div>
+              <label
+                class="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-ink"
+                for="email"
+                >Email</label
+              >
+              <input
+                id="email"
+                class="w-full border border-line bg-paper px-4 py-3 text-sm outline-none focus:border-ink"
+                name="email"
+                type="email"
+                placeholder="you@stud.noroff.no"
+                required
+              />
+              <p class="mt-2 text-xs text-muted-ink">
+                Only <strong>@stud.noroff.no</strong> addresses accepted
+              </p>
+            </div>
+
+            <div>
+              <label
+                class="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-ink"
+                for="password"
+                >Password</label
+              >
+              <input
+                id="password"
+                class="w-full border border-line bg-paper px-4 py-3 text-sm outline-none focus:border-ink"
+                name="password"
+                type="password"
+                placeholder="Password"
+                required
+                minlength="8"
+              />
+            </div>
+
+            <p
+              id="register-message"
+              class="hidden"
+              role="status"
+              aria-live="polite"
+            ></p>
+            <button
+              class="mt-2 w-full bg-auction-red py-4 text-xs font-semibold uppercase tracking-[0.2em] text-paper"
+              type="submit"
+            >
+              Create Account
+            </button>
+          </form>
+        </div>
+
+        <p class="mt-6 text-center text-sm text-muted-ink">
+          Already have an account?
+          <a class="text-ink underline" href="./login.html">Sign in</a>
+        </p>
+      </div>
     </main>
   </body>
 </html>

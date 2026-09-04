@@ -8,17 +8,24 @@ const STUDENT_EMAIL_PATTERN = /^[^\s@]+@stud\.noroff\.no$/i;
 const formElement = document.querySelector<HTMLFormElement>("#register-form");
 const messageElement =
   document.querySelector<HTMLParagraphElement>("#register-message");
+const successElement =
+  document.querySelector<HTMLDivElement>("#register-success");
 
-if (!formElement || !messageElement) {
+if (!formElement || !messageElement || !successElement) {
   throw new Error("Register form markup is missing required elements.");
 }
 
 const form = formElement;
 const message = messageElement;
+const success = successElement;
 
 function setMessage(text: string, isError = false): void {
   message.textContent = text;
-  message.style.color = isError ? "#b00020" : "#0f5132";
+  message.className = text
+    ? isError
+      ? "border border-[#c0392b]/30 bg-[#c0392b]/10 p-3 text-xs text-[#c0392b]"
+      : "border border-success/30 bg-success/10 p-3 text-xs text-success"
+    : "hidden";
 }
 
 form.addEventListener("submit", async (event: SubmitEvent) => {
@@ -50,8 +57,11 @@ form.addEventListener("submit", async (event: SubmitEvent) => {
     const body: RegisterBody = { name, email, password };
     await post<ApiResponse<unknown>, RegisterBody>(API_REGISTER_URL, body);
     saveFullName(email, fullName);
-    setMessage("Registration successful. You can now log in.");
-    form.reset();
+    form.classList.add("hidden");
+    success.classList.remove("hidden");
+    window.setTimeout(() => {
+      window.location.href = "./login.html";
+    }, 1200);
   } catch (error) {
     const text =
       error instanceof Error
