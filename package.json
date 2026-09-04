@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build": "npx --no-install tsc --noEmit && vite build",
+    "build": "node ./node_modules/typescript/bin/tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "repository": {
