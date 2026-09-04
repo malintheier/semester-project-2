@@ -30,7 +30,6 @@ const surfaceElement = requireElement<HTMLInputElement>("#listing-surface");
 const dimensionsElement = requireElement<HTMLInputElement>(
   "#listing-dimensions",
 );
-const reserveElement = requireElement<HTMLInputElement>("#listing-reserve");
 const mediaUrlElement = requireElement<HTMLInputElement>("#media-url");
 const addMediaButton = requireElement<HTMLButtonElement>("#add-media");
 const mediaPreviewElement = requireElement<HTMLDivElement>("#media-preview");
@@ -101,7 +100,6 @@ function getTags(): string[] {
     dimensionsElement.value.trim()
       ? `dimensions:${dimensionsElement.value.trim()}`
       : "",
-    reserveElement.value.trim() ? `reserve:${reserveElement.value.trim()}` : "",
   ];
 
   return values.filter(Boolean);

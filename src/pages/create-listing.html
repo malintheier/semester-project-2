@@ -171,36 +171,19 @@
           >
             Auction Settings
           </p>
-          <div class="grid gap-4 sm:grid-cols-2 sm:gap-5">
-            <div>
-              <label
-                class="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-ink"
-                for="listing-reserve"
-                >Reserve Price</label
-              >
-              <input
-                id="listing-reserve"
-                class="w-full border border-line bg-white px-4 py-3 text-sm outline-none focus:border-ink"
-                name="reserve"
-                type="number"
-                min="0"
-                placeholder="e.g. 5000"
-              />
-            </div>
-            <div>
-              <label
-                class="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-ink"
-                for="listing-deadline"
-                >Auction Deadline *</label
-              >
-              <input
-                id="listing-deadline"
-                class="w-full border border-line bg-white px-4 py-3 text-sm outline-none focus:border-ink"
-                name="deadline"
-                type="datetime-local"
-                required
-              />
-            </div>
+          <div>
+            <label
+              class="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-ink"
+              for="listing-deadline"
+              >Auction Deadline *</label
+            >
+            <input
+              id="listing-deadline"
+              class="w-full border border-line bg-white px-4 py-3 text-sm outline-none focus:border-ink"
+              name="deadline"
+              type="datetime-local"
+              required
+            />
           </div>
         </section>
 

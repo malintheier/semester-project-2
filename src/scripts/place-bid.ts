@@ -38,6 +38,8 @@ const descriptionElement = requireElement<HTMLParagraphElement>(
 );
 const detailArtistElement = requireElement<HTMLElement>("#detail-artist");
 const detailMediumElement = requireElement<HTMLElement>("#detail-medium");
+const detailDimensionsElement =
+  requireElement<HTMLElement>("#detail-dimensions");
 const detailDeadlineElement = requireElement<HTMLElement>("#detail-deadline");
 const detailBidsElement = requireElement<HTMLElement>("#detail-bids");
 const currentBidElement = requireElement<HTMLParagraphElement>("#current-bid");
@@ -99,6 +101,14 @@ function getCategory(listing: Listing): string | null {
   return category || null;
 }
 
+function getTagValue(listing: Listing, key: string): string | null {
+  const tags = Array.isArray(listing.tags) ? listing.tags : [];
+  const prefix = `${key.toLowerCase()}:`;
+  const tag = tags.find((item) => item.toLowerCase().startsWith(prefix));
+
+  return tag ? tag.slice(prefix.length).trim() || null : null;
+}
+
 function getHighestBid(listing: Listing): number {
   return (listing.bids || []).reduce((highest, bid) => {
     const amount = Number(bid.amount || 0);
@@ -131,7 +141,13 @@ function renderListingManagement(listing: Listing): void {
 
   editTitleElement.value = listing.title || "";
   editDescriptionElement.value = listing.description || "";
-  editTagsElement.value = (listing.tags || []).join(", ");
+  editTagsElement.value = (listing.tags || [])
+    .filter(
+      (tag) =>
+        tag.toLowerCase() !== APP_TAG &&
+        !tag.toLowerCase().startsWith("reserve:"),
+    )
+    .join(", ");
   editMediaElement.value = (listing.media || [])
     .map((media) => media.url || "")
     .filter(Boolean)
@@ -258,6 +274,10 @@ function renderListing(listing: Listing): void {
   detailMediumElement.textContent = category
     ? formatCategory(category)
     : "Not specified";
+  const dimensions = getTagValue(listing, "dimensions");
+  detailDimensionsElement.textContent = dimensions
+    ? `${dimensions} cm`
+    : "Not specified";
   detailDeadlineElement.textContent = formatDate(listing.endsAt);
   detailBidsElement.textContent = String(
     listing._count?.bids ?? listing.bids?.length ?? 0,
@@ -382,7 +402,12 @@ editListingForm.addEventListener("submit", async (event) => {
     ...editTagsElement.value
       .split(",")
       .map((tag) => tag.trim())
-      .filter((tag) => Boolean(tag) && tag.toLowerCase() !== APP_TAG),
+      .filter(
+        (tag) =>
+          Boolean(tag) &&
+          tag.toLowerCase() !== APP_TAG &&
+          !tag.toLowerCase().startsWith("reserve:"),
+      ),
   ];
   const media = editMediaElement.value
     .split("\n")
