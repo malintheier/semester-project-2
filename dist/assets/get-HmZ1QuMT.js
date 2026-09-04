@@ -1,1 +1,0 @@
-async function e(e,t,n){let r=new Headers({Accept:`application/json`});t&&r.set(`Authorization`,`Bearer ${t}`),n&&r.set(`X-Noroff-API-Key`,n);let i=await fetch(e,{method:`GET`,headers:r});if(!i.ok)throw Error(`GET request failed with status ${i.status}`);return i.json()}export{e as t};
