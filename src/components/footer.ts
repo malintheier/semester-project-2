@@ -48,11 +48,12 @@ export function renderFooter(): void {
     document.body.appendChild(footer);
   }
 
-  footer.className = "hidden border-t border-paper/10 bg-ink lg:block";
+  footer.className = "border-t border-paper/10 bg-ink";
   footer.innerHTML = "";
 
   const container = document.createElement("div");
-  container.className = "mx-auto max-w-7xl px-6 py-16 lg:px-10";
+  container.className =
+    "mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-16";
 
   const top = document.createElement("div");
   top.className = "mb-12 flex flex-col justify-between gap-12 lg:flex-row";

@@ -121,7 +121,7 @@ export function renderHeader(
 
     const logoutButton = document.createElement("button");
     logoutButton.className =
-      "hidden border border-line px-3 py-1.5 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink sm:block";
+      "border border-line px-2 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-ink sm:px-3 sm:py-1.5 sm:text-xs sm:tracking-[0.15em]";
     logoutButton.type = "button";
     logoutButton.textContent = "<- Log out";
     logoutButton.addEventListener("click", () => {
