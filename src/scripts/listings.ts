@@ -3,6 +3,7 @@ import { createArtCard } from "../components/art-card";
 import type { ApiResponse, Listing } from "../types";
 
 const API_LISTINGS_URL = "https://v2.api.noroff.dev/auction/listings";
+const APP_TAG = "arthaus";
 const LISTINGS_PER_PAGE = 12;
 
 const listElementQuery =
@@ -213,6 +214,7 @@ function updateLoadMoreButton(): void {
 function getListingsUrl(page: number): string {
   const parameters = new URLSearchParams({
     _active: "true",
+    _tag: APP_TAG,
     _bids: "true",
     _seller: "true",
     limit: String(LISTINGS_PER_PAGE),

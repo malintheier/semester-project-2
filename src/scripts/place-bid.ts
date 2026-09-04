@@ -14,6 +14,7 @@ import "../styles/tailwind.css";
 
 const API_BASE_URL = "https://v2.api.noroff.dev/auction/listings";
 const CATEGORIES = ["oil", "acrylic", "watercolor"] as const;
+const APP_TAG = "arthaus";
 
 function requireElement<T extends Element>(selector: string): T {
   const element = document.querySelector<T>(selector);
@@ -376,10 +377,13 @@ editListingForm.addEventListener("submit", async (event) => {
     return;
   }
 
-  const tags = editTagsElement.value
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter(Boolean);
+  const tags = [
+    APP_TAG,
+    ...editTagsElement.value
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => Boolean(tag) && tag.toLowerCase() !== APP_TAG),
+  ];
   const media = editMediaElement.value
     .split("\n")
     .map((url) => url.trim())

@@ -5,6 +5,7 @@ import { getUserState, TOKEN_STORAGE_KEY } from "./user-state";
 import "../styles/tailwind.css";
 
 const API_LISTINGS_URL = "https://v2.api.noroff.dev/auction/listings";
+const APP_TAG = "arthaus";
 
 function requireElement<T extends Element>(selector: string): T {
   const element = document.querySelector<T>(selector);
@@ -93,6 +94,7 @@ function addMedia(): void {
 
 function getTags(): string[] {
   const values = [
+    APP_TAG,
     selectedMedium,
     yearElement.value.trim() ? `year:${yearElement.value.trim()}` : "",
     surfaceElement.value.trim() ? `surface:${surfaceElement.value.trim()}` : "",
