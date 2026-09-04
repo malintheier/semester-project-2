@@ -8,7 +8,7 @@
       content="Place a bid on an artwork auction on Arthaus."
     />
     <title>Place Bid</title>
-    <script type="module" crossorigin src="/assets/placeBid-CAK4Wszv.js"></script>
+    <script type="module" crossorigin src="/assets/placeBid-Cs6P6rEh.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/user-state-5oslsYq7.js">
     <link rel="modulepreload" crossorigin href="/assets/get-HmZ1QuMT.js">
     <link rel="modulepreload" crossorigin href="/assets/post-DBsons9j.js">
@@ -241,7 +241,8 @@
             <h2 class="mt-2 font-display text-2xl font-bold italic">
               Manage listing
             </h2>
-            <form id="edit-listing-form" class="mt-5 space-y-4">
+            <button id="open-edit-listing" class="mt-5 w-full border border-line bg-card px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-ink" type="button">Edit listing</button>
+            <form id="edit-listing-form" class="mt-5 hidden space-y-4">
               <div>
                 <label
                   class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-ink"
@@ -267,16 +268,12 @@
                 ></textarea>
               </div>
               <div>
-                <label
-                  class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-ink"
-                  for="edit-listing-tags"
-                  >Tags</label
-                >
-                <input
-                  id="edit-listing-tags"
-                  class="mt-2 w-full border border-line bg-card px-3 py-2 text-sm outline-none focus:border-ink"
-                  placeholder="oil, abstract"
-                />
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-ink">Medium</p>
+                <div id="edit-category-options" class="mt-2 flex flex-wrap gap-2">
+                  <button class="edit-category-option border border-line bg-card px-3 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink" data-category="oil" type="button">Oil</button>
+                  <button class="edit-category-option border border-line bg-card px-3 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink" data-category="acrylic" type="button">Acrylic</button>
+                  <button class="edit-category-option border border-line bg-card px-3 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink" data-category="watercolor" type="button">Watercolor</button>
+                </div>
               </div>
               <div>
                 <label
@@ -291,12 +288,10 @@
                   placeholder="One image URL per line"
                 ></textarea>
               </div>
-              <button
-                class="w-full bg-auction-red px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-paper"
-                type="submit"
-              >
-                Save changes
-              </button>
+              <div class="flex gap-3">
+                <button class="flex-1 bg-auction-red px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-paper" type="submit">Save changes</button>
+                <button id="cancel-edit-listing" class="border border-line px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted-ink" type="button">Cancel</button>
+              </div>
             </form>
             <button
               id="delete-listing-button"

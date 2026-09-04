@@ -53,14 +53,24 @@ const bidActionsElement = requireElement<HTMLDivElement>("#bid-actions");
 const listingManagementElement = requireElement<HTMLElement>(
   "#listing-management",
 );
+const openEditListingButton =
+  requireElement<HTMLButtonElement>("#open-edit-listing");
 const editListingForm = requireElement<HTMLFormElement>("#edit-listing-form");
+const cancelEditListingButton = requireElement<HTMLButtonElement>(
+  "#cancel-edit-listing",
+);
 const editTitleElement = requireElement<HTMLInputElement>(
   "#edit-listing-title",
 );
 const editDescriptionElement = requireElement<HTMLTextAreaElement>(
   "#edit-listing-description",
 );
-const editTagsElement = requireElement<HTMLInputElement>("#edit-listing-tags");
+const editCategoryButtons = Array.from(
+  document.querySelectorAll<HTMLButtonElement>(".edit-category-option"),
+);
+const editSurfaceElement = requireElement<HTMLInputElement>(
+  "#edit-listing-surface",
+);
 const editMediaElement = requireElement<HTMLTextAreaElement>(
   "#edit-listing-media",
 );
@@ -74,6 +84,7 @@ const secondsElement = requireElement<HTMLSpanElement>("#countdown-seconds");
 
 let currentListing: Listing | null = null;
 let countdownTimer: number | undefined;
+let selectedEditCategory = "";
 
 function setStatus(text: string, isError = false): void {
   statusElement.textContent = text;
@@ -146,18 +157,36 @@ function renderListingManagement(listing: Listing): void {
 
   editTitleElement.value = listing.title || "";
   editDescriptionElement.value = listing.description || "";
-  editTagsElement.value = (listing.tags || [])
-    .filter(
-      (tag) =>
-        tag.toLowerCase() !== APP_TAG &&
-        !tag.toLowerCase().startsWith("reserve:"),
-    )
-    .join(", ");
+  selectedEditCategory = getCategory(listing) || "";
+  editCategoryButtons.forEach((button) => {
+    const isSelected = button.dataset.category === selectedEditCategory;
+    button.className = isSelected
+      ? "edit-category-option border border-auction-red bg-auction-red px-3 py-2 text-xs font-medium uppercase tracking-[0.15em] text-paper"
+      : "edit-category-option border border-line bg-card px-3 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink";
+  });
+  editSurfaceElement.value = getTagValue(listing, "surface") || "";
   editMediaElement.value = (listing.media || [])
     .map((media) => media.url || "")
     .filter(Boolean)
     .join("\n");
 }
+
+function toggleEditListing(show: boolean): void {
+  editListingForm.classList.toggle("hidden", !show);
+  openEditListingButton.classList.toggle("hidden", show);
+}
+
+editCategoryButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    selectedEditCategory = button.dataset.category || "";
+    editCategoryButtons.forEach((categoryButton) => {
+      const isSelected = categoryButton === button;
+      categoryButton.className = isSelected
+        ? "edit-category-option border border-auction-red bg-auction-red px-3 py-2 text-xs font-medium uppercase tracking-[0.15em] text-paper"
+        : "edit-category-option border border-line bg-card px-3 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink";
+    });
+  });
+});
 
 function renderMedia(listing: Listing): void {
   const media = Array.isArray(listing.media)
@@ -401,6 +430,7 @@ editListingForm.addEventListener("submit", async (event) => {
 
   const title = editTitleElement.value.trim();
   const description = editDescriptionElement.value.trim();
+  const surface = editSurfaceElement.value.trim();
 
   if (!title) {
     setBidMessage("Listing title is required.", true);
@@ -409,16 +439,18 @@ editListingForm.addEventListener("submit", async (event) => {
 
   const tags = [
     APP_TAG,
-    ...editTagsElement.value
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(
-        (tag) =>
-          Boolean(tag) &&
-          tag.toLowerCase() !== APP_TAG &&
-          !tag.toLowerCase().startsWith("reserve:"),
-      ),
-  ];
+    selectedEditCategory,
+    surface ? `surface:${surface}` : "",
+    ...(currentListing.tags || []).filter((tag) => {
+      const normalizedTag = tag.toLowerCase();
+      return (
+        normalizedTag !== APP_TAG &&
+        !CATEGORIES.includes(normalizedTag as (typeof CATEGORIES)[number]) &&
+        !normalizedTag.startsWith("surface:") &&
+        !normalizedTag.startsWith("reserve:")
+      );
+    }),
+  ].filter(Boolean);
   const media = editMediaElement.value
     .split("\n")
     .map((url) => url.trim())
@@ -448,6 +480,7 @@ editListingForm.addEventListener("submit", async (event) => {
       bids: response.data.bids || currentListing.bids,
     };
     renderListing(currentListing);
+    toggleEditListing(false);
     setBidMessage("Listing updated successfully.");
   } catch (error) {
     setBidMessage(
@@ -455,6 +488,17 @@ editListingForm.addEventListener("submit", async (event) => {
       true,
     );
   }
+});
+
+openEditListingButton.addEventListener("click", () => {
+  toggleEditListing(true);
+});
+
+cancelEditListingButton.addEventListener("click", () => {
+  if (currentListing) {
+    renderListingManagement(currentListing);
+  }
+  toggleEditListing(false);
 });
 
 deleteListingButton.addEventListener("click", async () => {
