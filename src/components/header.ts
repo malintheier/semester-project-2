@@ -61,7 +61,7 @@ export function renderHeader(
 
   const container = document.createElement("div");
   container.className =
-    "mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:h-16 sm:px-6 lg:h-20 lg:px-10";
+    "relative mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:h-16 sm:px-6 lg:h-20 lg:px-10";
 
   const logo = document.createElement("a");
   logo.className = "font-display text-lg font-black italic text-ink sm:text-xl";
@@ -69,7 +69,8 @@ export function renderHeader(
   logo.textContent = "ARTHAUS";
 
   const navigation = document.createElement("nav");
-  navigation.className = "hidden items-center gap-8 lg:flex";
+  navigation.className =
+    "hidden items-center gap-8 lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2";
   navigation.setAttribute("aria-label", "Main navigation");
   navigation.append(
     createLink("Browse", getPageUrl("home"), isCurrentPage("home")),
@@ -100,19 +101,7 @@ export function renderHeader(
     profileLink.href = getPageUrl("profile");
     profileLink.setAttribute("aria-label", "My profile");
 
-    if (user.avatarUrl) {
-      const avatar = document.createElement("img");
-      avatar.className = "h-full w-full object-cover";
-      avatar.src = user.avatarUrl;
-      avatar.alt = user.fullName || user.name;
-      avatar.addEventListener("error", () => {
-        avatar.remove();
-        profileLink.textContent = getInitials(user.fullName || user.name);
-      });
-      profileLink.appendChild(avatar);
-    } else {
-      profileLink.textContent = getInitials(user.fullName || user.name);
-    }
+    profileLink.textContent = getInitials(user.fullName || user.name);
 
     const logoutButton = document.createElement("button");
     logoutButton.className =

@@ -80,12 +80,8 @@ function renderProfile(profile: Profile): void {
   creditsElement.textContent = String(profile.credits ?? 0);
   initialsElement.textContent = getInitials(displayName);
 
-  if (profile.avatar?.url) {
-    avatarElement.src = profile.avatar.url;
-    avatarElement.alt = profile.avatar.alt || `${displayName}'s avatar`;
-    avatarElement.classList.remove("hidden");
-    initialsElement.classList.add("hidden");
-  }
+  avatarElement.classList.add("hidden");
+  initialsElement.classList.remove("hidden");
 
   if (profile.banner?.url) {
     bannerElement.src = profile.banner.url;
@@ -194,11 +190,11 @@ function showTab(tab: "listings" | "bids"): void {
   listingsTab.setAttribute("aria-selected", String(showListings));
   bidsTab.setAttribute("aria-selected", String(!showListings));
   listingsTab.className = showListings
-    ? "border-b-2 border-auction-red px-6 py-3 text-sm font-semibold text-auction-red"
-    : "px-6 py-3 text-sm font-semibold text-muted-ink";
+    ? "border-b-2 border-auction-red px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-auction-red"
+    : "px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink";
   bidsTab.className = showListings
-    ? "px-6 py-3 text-sm font-semibold text-muted-ink"
-    : "border-b-2 border-auction-red px-6 py-3 text-sm font-semibold text-auction-red";
+    ? "px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink"
+    : "border-b-2 border-auction-red px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-auction-red";
 }
 
 async function loadProfile(): Promise<void> {
