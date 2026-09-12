@@ -20,25 +20,36 @@
       ></p>
 
       <div id="profile-content" class="hidden">
-        <section class="relative h-36 overflow-hidden bg-ink lg:h-64">
+        <section class="relative h-40 overflow-hidden bg-ink lg:h-[18rem]">
           <img
             id="profile-banner"
-            class="hidden h-full w-full object-cover"
+            class="absolute inset-0 z-20 hidden h-full w-full object-cover"
             src=""
             alt=""
           />
-          <div class="absolute right-4 top-4 sm:right-6 lg:right-10">
-            <a
-              class="bg-ink/70 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-paper"
-              href="./edit-profile.html"
-              >Edit Profile</a
+          <div
+            id="profile-banner-default"
+            class="absolute inset-0 z-10 flex items-center bg-ink text-[3rem] font-display font-black italic leading-none text-paper/10 sm:text-[4.5rem] lg:text-[7rem]"
+          >
+            <div
+              class="mx-auto w-full max-w-6xl px-4 text-left sm:px-6 lg:px-10"
             >
+              <span>Profile</span>
+            </div>
+          </div>
+          <div class="absolute right-4 top-4 z-20 sm:right-6 lg:right-10">
+            <a
+              class="inline-flex items-center border border-paper/80 bg-transparent px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-paper no-underline"
+              href="./edit-profile.html"
+            >
+              Edit Profile
+            </a>
           </div>
         </section>
 
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
           <div
-            class="relative -mt-10 h-20 w-20 overflow-hidden border-[3px] border-paper bg-auction-red lg:-mt-12 lg:h-24 lg:w-24 lg:border-4"
+            class="relative z-20 -mt-10 h-20 w-20 overflow-hidden border-[3px] border-paper bg-auction-red lg:-mt-12 lg:h-24 lg:w-24 lg:border-4"
           >
             <img
               id="profile-avatar"

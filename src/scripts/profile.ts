@@ -2,11 +2,32 @@ import { get } from "../api/get";
 import type { ApiResponse, Bid, Listing, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
 import {
+  getCustomAvatar,
+  getCustomBanner,
   getFullName,
   getUserState,
+  saveFullName,
   setUserState,
   TOKEN_STORAGE_KEY,
 } from "./user-state";
+
+function getDisplayBannerUrl(profile: Profile): string | undefined {
+  const customBannerUrl = getCustomBanner(profile.email, profile.name);
+  if (customBannerUrl) {
+    return customBannerUrl;
+  }
+
+  const serverBannerUrl = profile.banner?.url?.trim();
+  if (!serverBannerUrl) {
+    return undefined;
+  }
+
+  const isDefaultBanner =
+    serverBannerUrl === "https://images.unsplash.com/" ||
+    serverBannerUrl.includes("images.unsplash.com");
+
+  return isDefaultBanner ? undefined : serverBannerUrl;
+}
 import "../styles/tailwind.css";
 
 const API_BASE_URL = "https://v2.api.noroff.dev/auction/profiles";
@@ -24,6 +45,9 @@ function requireElement<T extends Element>(selector: string): T {
 const statusElement = requireElement<HTMLParagraphElement>("#profile-status");
 const contentElement = requireElement<HTMLDivElement>("#profile-content");
 const bannerElement = requireElement<HTMLImageElement>("#profile-banner");
+const defaultBannerElement = requireElement<HTMLDivElement>(
+  "#profile-banner-default",
+);
 const avatarElement = requireElement<HTMLImageElement>("#profile-avatar");
 const initialsElement = requireElement<HTMLSpanElement>("#profile-initials");
 const nameElement = requireElement<HTMLHeadingElement>("#profile-name");
@@ -75,10 +99,72 @@ function getHighestBid(listing?: Listing): number {
   }, 0);
 }
 
+function getBidArtistName(bid: Bid): string {
+  const sellerName = bid.listing?.seller?.name?.trim();
+  if (sellerName) {
+    return sellerName;
+  }
+
+  const seller = bid.listing?.seller as unknown;
+  if (typeof seller === "string" && seller.trim()) {
+    return seller.trim();
+  }
+
+  if (seller && typeof seller === "object") {
+    const maybeName = Object.values(seller as Record<string, unknown>).find(
+      (value) => typeof value === "string" && value.trim(),
+    );
+
+    if (typeof maybeName === "string" && maybeName.trim()) {
+      return maybeName.trim();
+    }
+  }
+
+  return "Arthaus artist";
+}
+
+async function hydrateBidsWithSeller(bids: Bid[]): Promise<Bid[]> {
+  const missingSellerBids = bids.filter(
+    (bid) => !bid.listing?.seller?.name && bid.listing?.id,
+  );
+
+  if (!missingSellerBids.length) {
+    return bids;
+  }
+
+  const enrichedBids = await Promise.all(
+    bids.map(async (bid) => {
+      if (bid.listing?.seller?.name || !bid.listing?.id) {
+        return bid;
+      }
+
+      try {
+        const listingResponse = await get<ApiResponse<Listing>>(
+          `https://v2.api.noroff.dev/auction/listings/${encodeURIComponent(bid.listing.id)}?_seller=true`,
+        );
+        return {
+          ...bid,
+          listing: {
+            ...(bid.listing || {}),
+            ...(listingResponse.data || {}),
+          },
+        };
+      } catch {
+        return bid;
+      }
+    }),
+  );
+
+  return enrichedBids;
+}
+
 function renderProfile(profile: Profile): void {
   const user = getUserState();
   const displayName =
-    user?.fullName || getFullName(profile.email) || profile.name;
+    user?.fullName ||
+    getFullName(user?.email || profile.email) ||
+    getFullName(profile.email) ||
+    profile.name;
 
   nameElement.textContent = displayName;
   metaElement.textContent = `@${profile.name}`;
@@ -86,12 +172,15 @@ function renderProfile(profile: Profile): void {
   creditsElement.textContent = String(profile.credits ?? 0);
   initialsElement.textContent = getInitials(displayName);
 
-  if (user?.customAvatarUrl) {
+  const customAvatarUrl =
+    getCustomAvatar(profile.email, profile.name) ?? user?.customAvatarUrl;
+
+  if (customAvatarUrl) {
     avatarElement.onerror = () => {
       avatarElement.classList.add("hidden");
       initialsElement.classList.remove("hidden");
     };
-    avatarElement.src = user.customAvatarUrl;
+    avatarElement.src = customAvatarUrl;
     avatarElement.alt = `${displayName}'s avatar`;
     avatarElement.classList.remove("hidden");
     initialsElement.classList.add("hidden");
@@ -105,14 +194,18 @@ function renderProfile(profile: Profile): void {
     initialsElement.classList.remove("hidden");
   }
 
-  if (profile.banner?.url) {
-    bannerElement.src = profile.banner.url;
-    bannerElement.alt = profile.banner.alt || `${displayName}'s banner`;
+  const bannerUrl = getDisplayBannerUrl(profile);
+
+  if (bannerUrl) {
+    bannerElement.src = bannerUrl;
+    bannerElement.alt = `${displayName}'s banner`;
     bannerElement.classList.remove("hidden");
+    defaultBannerElement.classList.add("hidden");
   } else {
     bannerElement.removeAttribute("src");
     bannerElement.alt = "";
     bannerElement.classList.add("hidden");
+    defaultBannerElement.classList.remove("hidden");
   }
 }
 
@@ -197,7 +290,7 @@ function renderBids(bids: Bid[]): void {
 
     const artist = document.createElement("p");
     artist.className = "mt-1 font-display text-sm italic text-muted-ink";
-    artist.textContent = bid.listing?.seller?.name || "Arthaus artist";
+    artist.textContent = getBidArtistName(bid);
 
     const amount = document.createElement("p");
     amount.className = "shrink-0 text-right text-sm font-bold sm:text-base";
@@ -242,22 +335,31 @@ async function loadProfile(): Promise<void> {
       apiKey,
     );
     const bidsResponse = await get<ApiResponse<Bid[]>>(
-      `${API_BASE_URL}/${encodeURIComponent(user.name)}/bids?_listings=true`,
+      `${API_BASE_URL}/${encodeURIComponent(user.name)}/bids?_listings=true&_seller=true`,
       token,
       apiKey,
     );
     const profile = profileResponse.data;
+    const resolvedFullName =
+      user.fullName ||
+      getFullName(user.email) ||
+      getFullName(profile.email) ||
+      profile.name;
+
+    saveFullName(profile.email, resolvedFullName);
 
     setUserState({
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      fullName: user.fullName || getFullName(profile.email) || profile.name,
+      fullName: resolvedFullName,
       customAvatarUrl: user.customAvatarUrl,
     });
+    const bidsWithSeller = await hydrateBidsWithSeller(bidsResponse.data || []);
+
     renderProfile(profile);
     renderListings(profile.listings || [], profile.name);
-    renderBids(bidsResponse.data || []);
+    renderBids(bidsWithSeller);
     contentElement.classList.remove("hidden");
     setStatus("");
   } catch (error) {

@@ -19,17 +19,27 @@
         aria-live="polite"
       ></p>
       <div id="public-profile-content" class="hidden">
-        <section class="relative h-36 overflow-hidden bg-ink lg:h-64">
+        <section class="relative h-40 overflow-hidden bg-ink lg:h-[18rem]">
           <img
             id="public-profile-banner"
-            class="hidden h-full w-full object-cover"
+            class="absolute inset-0 z-20 hidden h-full w-full object-cover"
             src=""
             alt=""
           />
+          <div
+            id="public-profile-banner-default"
+            class="absolute inset-0 z-10 flex items-center bg-ink text-[3rem] font-display font-black italic leading-none text-paper/10 sm:text-[4.5rem] lg:text-[7rem]"
+          >
+            <div
+              class="mx-auto w-full max-w-6xl px-4 text-left sm:px-6 lg:px-10"
+            >
+              <span>Profile</span>
+            </div>
+          </div>
         </section>
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
           <div
-            class="relative -mt-10 h-20 w-20 overflow-hidden border-[3px] border-paper bg-auction-red lg:-mt-12 lg:h-24 lg:w-24 lg:border-4"
+            class="relative z-20 -mt-10 h-20 w-20 overflow-hidden border-[3px] border-paper bg-auction-red lg:-mt-12 lg:h-24 lg:w-24 lg:border-4"
           >
             <img
               id="public-profile-avatar"

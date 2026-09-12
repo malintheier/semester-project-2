@@ -4,6 +4,19 @@ import { getOrCreateApiKey } from "./api-key";
 import { getUserState, TOKEN_STORAGE_KEY } from "./user-state";
 import "../styles/tailwind.css";
 
+function getDisplayBannerUrl(profile: Profile): string | undefined {
+  const serverBannerUrl = profile.banner?.url?.trim();
+  if (!serverBannerUrl) {
+    return undefined;
+  }
+
+  const isDefaultBanner =
+    serverBannerUrl === "https://images.unsplash.com/" ||
+    serverBannerUrl.includes("images.unsplash.com");
+
+  return isDefaultBanner ? undefined : serverBannerUrl;
+}
+
 const API_BASE_URL = "https://v2.api.noroff.dev/auction/profiles";
 
 function requireElement<T extends Element>(selector: string): T {
@@ -24,6 +37,9 @@ const contentElement = requireElement<HTMLDivElement>(
 );
 const bannerElement = requireElement<HTMLImageElement>(
   "#public-profile-banner",
+);
+const defaultBannerElement = requireElement<HTMLDivElement>(
+  "#public-profile-banner-default",
 );
 const avatarElement = requireElement<HTMLImageElement>(
   "#public-profile-avatar",
@@ -104,15 +120,63 @@ function renderProfile(profile: Profile): void {
     initialsElement.classList.add("hidden");
   }
 
-  if (profile.banner?.url) {
-    bannerElement.src = profile.banner.url;
-    bannerElement.alt = profile.banner.alt || `${profile.name}'s banner`;
+  const bannerUrl = getDisplayBannerUrl(profile);
+
+  if (bannerUrl) {
+    bannerElement.src = bannerUrl;
+    bannerElement.alt = profile.banner?.alt || `${profile.name}'s banner`;
     bannerElement.classList.remove("hidden");
+    defaultBannerElement.classList.add("hidden");
   } else {
     bannerElement.removeAttribute("src");
     bannerElement.alt = "";
     bannerElement.classList.add("hidden");
+    defaultBannerElement.classList.remove("hidden");
   }
+}
+
+function getBidArtistName(bid: Bid): string {
+  const sellerName = bid.listing?.seller?.name?.trim();
+  if (sellerName) {
+    return sellerName;
+  }
+
+  return "Arthaus artist";
+}
+
+async function hydrateBidsWithSeller(bids: Bid[]): Promise<Bid[]> {
+  const missingSellerBids = bids.filter(
+    (bid) => !bid.listing?.seller?.name && bid.listing?.id,
+  );
+
+  if (!missingSellerBids.length) {
+    return bids;
+  }
+
+  const enrichedBids = await Promise.all(
+    bids.map(async (bid) => {
+      if (bid.listing?.seller?.name || !bid.listing?.id) {
+        return bid;
+      }
+
+      try {
+        const listingResponse = await get<ApiResponse<Listing>>(
+          `https://v2.api.noroff.dev/auction/listings/${encodeURIComponent(bid.listing.id)}?_seller=true`,
+        );
+        return {
+          ...bid,
+          listing: {
+            ...(bid.listing || {}),
+            ...(listingResponse.data || {}),
+          },
+        };
+      } catch {
+        return bid;
+      }
+    }),
+  );
+
+  return enrichedBids;
 }
 
 function renderListings(listings: Listing[]): void {
@@ -178,11 +242,15 @@ function renderBids(bids: Bid[]): void {
     title.className =
       "truncate font-display text-base font-bold italic sm:text-lg";
     title.textContent = bid.listing?.title || "Artwork";
+
+    const artist = document.createElement("p");
+    artist.className = "mt-1 font-display text-sm italic text-muted-ink";
+    artist.textContent = getBidArtistName(bid);
     const amount = document.createElement("p");
     amount.className = "shrink-0 text-right text-sm font-bold sm:text-base";
     amount.textContent = `${Number(bid.amount || 0)} credits`;
 
-    details.appendChild(title);
+    details.append(title, artist);
     item.append(image, details, amount);
     bidsElement.appendChild(item);
   });
@@ -232,13 +300,15 @@ async function loadPublicProfile(): Promise<void> {
       apiKey,
     );
     const bidsResponse = await get<ApiResponse<Bid[]>>(
-      `${API_BASE_URL}/${encodeURIComponent(profileName)}/bids?_listings=true`,
+      `${API_BASE_URL}/${encodeURIComponent(profileName)}/bids?_listings=true&_seller=true`,
       token,
       apiKey,
     );
+    const bidsWithSeller = await hydrateBidsWithSeller(bidsResponse.data || []);
+
     renderProfile(profileResponse.data);
     renderListings(profileResponse.data.listings || []);
-    renderBids(bidsResponse.data || []);
+    renderBids(bidsWithSeller);
     contentElement.classList.remove("hidden");
     setStatus("");
   } catch (error) {

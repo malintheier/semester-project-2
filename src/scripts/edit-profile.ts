@@ -3,8 +3,14 @@ import { put } from "../api/put";
 import type { ApiResponse, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
 import {
+  deleteCustomAvatar,
+  deleteCustomBanner,
+  getCustomAvatar,
+  getCustomBanner,
+  getFullName,
   getUserState,
   saveCustomAvatar,
+  saveCustomBanner,
   setUserState,
   TOKEN_STORAGE_KEY,
 } from "./user-state";
@@ -85,12 +91,20 @@ function updateBannerPreview(): void {
 }
 
 function populateForm(data: Profile): void {
-  displayNameElement.value = data.name;
+  const user = getUserState();
+  const fullName =
+    user?.fullName || getFullName(user?.email || data.email) || data.name;
+
+  const savedAvatarUrl =
+    getCustomAvatar(data.email, data.name) ?? user?.customAvatarUrl;
+  const savedBannerUrl = getCustomBanner(data.email, data.name);
+
+  displayNameElement.value = fullName;
   bioElement.value = data.bio || "";
-  avatarUrlElement.value = data.avatar?.url || "";
+  avatarUrlElement.value = savedAvatarUrl || "";
   initialAvatarUrl = avatarUrlElement.value;
-  bannerUrlElement.value = data.banner?.url || "";
-  avatarInitialsElement.textContent = getInitials(data.name);
+  bannerUrlElement.value = savedBannerUrl || "";
+  avatarInitialsElement.textContent = getInitials(fullName);
   updateAvatarPreview();
   updateBannerPreview();
 }
@@ -142,6 +156,8 @@ form.addEventListener("submit", async (event) => {
   const bio = bioElement.value.trim();
   const avatarUrl = avatarUrlElement.value.trim();
   const bannerUrl = bannerUrlElement.value.trim();
+  const originalAvatarUrl = profile.avatar?.url || "";
+  const originalBannerUrl = profile.banner?.url || "";
 
   if (bio.length > 160) {
     setStatus("Bio must be 160 characters or fewer.", true);
@@ -152,13 +168,17 @@ form.addEventListener("submit", async (event) => {
     const apiKey = await getOrCreateApiKey(token);
     const payload: {
       bio: string;
-      avatar: { url: string; alt: string };
-      banner: { url: string; alt: string };
-    } = {
-      bio,
-      avatar: { url: avatarUrl, alt: "" },
-      banner: { url: bannerUrl, alt: "" },
-    };
+      avatar?: { url: string; alt: string };
+      banner?: { url: string; alt: string };
+    } = { bio };
+
+    if (avatarUrl) {
+      payload.avatar = { url: avatarUrl, alt: "" };
+    }
+
+    if (bannerUrl) {
+      payload.banner = { url: bannerUrl, alt: "" };
+    }
 
     const response = await put<ApiResponse<Profile>, typeof payload>(
       `${API_BASE_URL}/${encodeURIComponent(profile.name)}`,
@@ -168,10 +188,19 @@ form.addEventListener("submit", async (event) => {
     );
 
     profile = response.data;
-    const avatarWasChanged = avatarUrl !== initialAvatarUrl;
+    const avatarWasChanged = avatarUrl !== originalAvatarUrl;
+    const bannerWasChanged = bannerUrl !== originalBannerUrl;
 
-    if (avatarWasChanged && avatarUrl) {
-      saveCustomAvatar(profile.email, avatarUrl);
+    if (avatarUrl) {
+      saveCustomAvatar(profile.email, avatarUrl, profile.name);
+    } else if (avatarWasChanged) {
+      deleteCustomAvatar(profile.email, profile.name);
+    }
+
+    if (bannerUrl) {
+      saveCustomBanner(profile.email, bannerUrl, profile.name);
+    } else if (bannerWasChanged) {
+      deleteCustomBanner(profile.email, profile.name);
     }
 
     setUserState({
@@ -179,9 +208,7 @@ form.addEventListener("submit", async (event) => {
       email: profile.email,
       credits: Number(profile.credits ?? 0),
       fullName: getUserState()?.fullName,
-      customAvatarUrl: avatarWasChanged
-        ? avatarUrl || undefined
-        : getUserState()?.customAvatarUrl,
+      customAvatarUrl: avatarUrl || undefined,
     });
     setStatus("Profile saved.");
     window.setTimeout(() => {

@@ -8,6 +8,7 @@ export const API_KEY_STORAGE_KEY = "arthaus_api_key";
 export const USER_STORAGE_KEY = "arthaus_user";
 export const FULL_NAME_STORAGE_KEY = "arthaus_full_names";
 export const CUSTOM_AVATAR_STORAGE_KEY = "arthaus_custom_avatars";
+export const CUSTOM_BANNER_STORAGE_KEY = "arthaus_custom_banners";
 export const STARTING_CREDITS = 1000;
 
 function toNumber(value: unknown): number {
@@ -76,14 +77,144 @@ function getCustomAvatarDirectory(): Record<string, string> {
   }
 }
 
-export function saveCustomAvatar(email: string, avatarUrl: string): void {
+export function saveCustomAvatar(
+  email: string,
+  avatarUrl: string,
+  profileName?: string,
+): void {
   const avatars = getCustomAvatarDirectory();
-  avatars[email.toLowerCase()] = avatarUrl;
+  const keys = [email.toLowerCase(), profileName?.toLowerCase()].filter(
+    Boolean,
+  ) as string[];
+
+  for (const key of keys) {
+    avatars[key] = avatarUrl;
+  }
+
   localStorage.setItem(CUSTOM_AVATAR_STORAGE_KEY, JSON.stringify(avatars));
 }
 
-export function getCustomAvatar(email: string): string | undefined {
-  return getCustomAvatarDirectory()[email.toLowerCase()];
+export function getCustomAvatar(
+  email: string,
+  profileName?: string,
+): string | undefined {
+  const avatars = getCustomAvatarDirectory();
+  const keys = [email.toLowerCase(), profileName?.toLowerCase()].filter(
+    Boolean,
+  ) as string[];
+
+  for (const key of keys) {
+    const avatarUrl = avatars[key];
+    if (avatarUrl) {
+      return avatarUrl;
+    }
+  }
+
+  return undefined;
+}
+
+export function deleteCustomAvatar(email: string, profileName?: string): void {
+  const avatars = getCustomAvatarDirectory();
+  const keys = [email.toLowerCase(), profileName?.toLowerCase()].filter(
+    Boolean,
+  ) as string[];
+
+  let deleted = false;
+
+  for (const key of keys) {
+    if (key in avatars) {
+      delete avatars[key];
+      deleted = true;
+    }
+  }
+
+  if (!deleted) {
+    return;
+  }
+
+  if (Object.keys(avatars).length === 0) {
+    localStorage.removeItem(CUSTOM_AVATAR_STORAGE_KEY);
+    return;
+  }
+
+  localStorage.setItem(CUSTOM_AVATAR_STORAGE_KEY, JSON.stringify(avatars));
+}
+
+function getCustomBannerDirectory(): Record<string, string> {
+  const raw = localStorage.getItem(CUSTOM_BANNER_STORAGE_KEY);
+
+  if (!raw) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(raw) as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
+export function saveCustomBanner(
+  email: string,
+  bannerUrl: string,
+  profileName?: string,
+): void {
+  const banners = getCustomBannerDirectory();
+  const keys = [email.toLowerCase(), profileName?.toLowerCase()].filter(
+    Boolean,
+  ) as string[];
+
+  for (const key of keys) {
+    banners[key] = bannerUrl;
+  }
+
+  localStorage.setItem(CUSTOM_BANNER_STORAGE_KEY, JSON.stringify(banners));
+}
+
+export function getCustomBanner(
+  email: string,
+  profileName?: string,
+): string | undefined {
+  const banners = getCustomBannerDirectory();
+  const keys = [email.toLowerCase(), profileName?.toLowerCase()].filter(
+    Boolean,
+  ) as string[];
+
+  for (const key of keys) {
+    const bannerUrl = banners[key];
+    if (bannerUrl) {
+      return bannerUrl;
+    }
+  }
+
+  return undefined;
+}
+
+export function deleteCustomBanner(email: string, profileName?: string): void {
+  const banners = getCustomBannerDirectory();
+  const keys = [email.toLowerCase(), profileName?.toLowerCase()].filter(
+    Boolean,
+  ) as string[];
+
+  let deleted = false;
+
+  for (const key of keys) {
+    if (key in banners) {
+      delete banners[key];
+      deleted = true;
+    }
+  }
+
+  if (!deleted) {
+    return;
+  }
+
+  if (Object.keys(banners).length === 0) {
+    localStorage.removeItem(CUSTOM_BANNER_STORAGE_KEY);
+    return;
+  }
+
+  localStorage.setItem(CUSTOM_BANNER_STORAGE_KEY, JSON.stringify(banners));
 }
 
 export function clearUserState(): void {
