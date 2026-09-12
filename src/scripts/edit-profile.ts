@@ -90,7 +90,6 @@ function updateBannerPreview(): void {
 
 function populateForm(data: Profile): void {
   const user = getUserState();
-  const fullName = user?.fullName || data.name;
 
   const savedAvatarUrl =
     getCustomAvatar(data.email, data.name) ?? user?.customAvatarUrl;
@@ -100,7 +99,7 @@ function populateForm(data: Profile): void {
   avatarUrlElement.value = savedAvatarUrl || "";
   initialAvatarUrl = avatarUrlElement.value;
   bannerUrlElement.value = savedBannerUrl || "";
-  avatarInitialsElement.textContent = getInitials(fullName);
+  avatarInitialsElement.textContent = getInitials(data.name);
   updateAvatarPreview();
   updateBannerPreview();
 }
@@ -184,7 +183,6 @@ form.addEventListener("submit", async (event) => {
     );
 
     profile = response.data;
-    const currentUser = getUserState();
     const avatarWasChanged = avatarUrl !== originalAvatarUrl;
     const bannerWasChanged = bannerUrl !== originalBannerUrl;
 
@@ -204,7 +202,6 @@ form.addEventListener("submit", async (event) => {
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      fullName: currentUser?.fullName,
       customAvatarUrl: avatarUrl || undefined,
     });
     setStatus("Profile saved.");

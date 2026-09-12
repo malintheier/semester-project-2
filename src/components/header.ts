@@ -105,14 +105,14 @@ export function renderHeader(
       const avatar = document.createElement("img");
       avatar.className = "h-full w-full object-cover";
       avatar.src = user.customAvatarUrl;
-      avatar.alt = user.fullName || user.name;
+      avatar.alt = user.name;
       avatar.addEventListener("error", () => {
         avatar.remove();
-        profileLink.textContent = getInitials(user.fullName || user.name);
+        profileLink.textContent = getInitials(user.name);
       });
       profileLink.appendChild(avatar);
     } else {
-      profileLink.textContent = getInitials(user.fullName || user.name);
+      profileLink.textContent = getInitials(user.name);
     }
 
     const logoutButton = document.createElement("button");

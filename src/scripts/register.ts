@@ -1,6 +1,5 @@
 import { post } from "../api/post";
 import type { ApiResponse, RegisterBody } from "../types";
-import { saveFullNameForProfile } from "./user-state";
 
 const API_REGISTER_URL = "https://v2.api.noroff.dev/auth/register";
 const STUDENT_EMAIL_PATTERN = /^[^\s@]+@stud\.noroff\.no$/i;
@@ -33,12 +32,11 @@ form.addEventListener("submit", async (event: SubmitEvent) => {
   setMessage("");
 
   const formData = new FormData(form);
-  const fullName = String(formData.get("full-name") || "").trim();
   const name = String(formData.get("username") || "").trim();
   const email = String(formData.get("email") || "").trim();
   const password = String(formData.get("password") || "");
 
-  if (!fullName || !name || !email || !password) {
+  if (!name || !email || !password) {
     setMessage("Please fill in all required fields.", true);
     return;
   }
@@ -56,7 +54,6 @@ form.addEventListener("submit", async (event: SubmitEvent) => {
   try {
     const body: RegisterBody = { name, email, password };
     await post<ApiResponse<unknown>, RegisterBody>(API_REGISTER_URL, body);
-    saveFullNameForProfile(email, fullName, name);
     form.classList.add("hidden");
     success.classList.remove("hidden");
     window.setTimeout(() => {

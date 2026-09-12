@@ -1,12 +1,7 @@
 import { get } from "../api/get";
 import type { ApiResponse, Bid, Listing, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
-import {
-  getFullName,
-  getUserState,
-  resolveDisplayName,
-  TOKEN_STORAGE_KEY,
-} from "./user-state";
+import { getUserState, TOKEN_STORAGE_KEY } from "./user-state";
 import "../styles/tailwind.css";
 
 function getDisplayBannerUrl(profile: Profile): string | undefined {
@@ -79,12 +74,7 @@ function setStatus(text: string, isError = false): void {
 }
 
 function getInitials(name: string): string {
-  return name
-    .split(/[._\s-]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() || "")
-    .join("");
+  return name.trim().charAt(0).toUpperCase();
 }
 
 function getImage(listing?: Listing): { url: string; alt: string } {
@@ -108,19 +98,10 @@ function openListing(listing: Listing): void {
 }
 
 function renderProfile(profile: Profile): void {
-  const user = getUserState();
-  const isOwnProfile = user?.name?.toLowerCase() === profile.name.toLowerCase();
-  const displayName =
-    (isOwnProfile
-      ? resolveDisplayName(
-          user?.fullName,
-          user?.email || profile.email,
-          profile.name,
-        )
-      : getFullName(profile.email, profile.name)) || profile.name;
+  const displayName = profile.name;
 
-  nameElement.textContent = displayName;
-  metaElement.textContent = `@${profile.name}`;
+  nameElement.textContent = `@${displayName}`;
+  metaElement.textContent = profile.email;
   bioElement.textContent = profile.bio || "No bio added yet.";
   creditsElement.textContent = String(profile.credits ?? 0);
   initialsElement.textContent = getInitials(displayName);

@@ -4,10 +4,7 @@ import { getOrCreateApiKey } from "./api-key";
 import {
   getCustomAvatar,
   getCustomBanner,
-  getFullName,
-  resolveDisplayName,
   getUserState,
-  saveFullNameForProfile,
   setUserState,
   TOKEN_STORAGE_KEY,
 } from "./user-state";
@@ -76,12 +73,7 @@ function setStatus(text: string, isError = false): void {
 }
 
 function getInitials(name: string): string {
-  return name
-    .split(/[._\s-]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() || "")
-    .join("");
+  return name.trim().charAt(0).toUpperCase();
 }
 
 function getImage(listing?: Listing): { url: string; alt: string } {
@@ -161,17 +153,10 @@ async function hydrateBidsWithSeller(bids: Bid[]): Promise<Bid[]> {
 
 function renderProfile(profile: Profile): void {
   const user = getUserState();
-  const displayName =
-    resolveDisplayName(
-      user?.fullName,
-      user?.email || profile.email,
-      profile.name,
-    ) ||
-    getFullName(profile.email) ||
-    profile.name;
+  const displayName = profile.name;
 
-  nameElement.textContent = displayName;
-  metaElement.textContent = `@${profile.name}`;
+  nameElement.textContent = `@${displayName}`;
+  metaElement.textContent = profile.email;
   bioElement.textContent = profile.bio || "No bio added yet.";
   creditsElement.textContent = String(profile.credits ?? 0);
   initialsElement.textContent = getInitials(displayName);
@@ -344,24 +329,10 @@ async function loadProfile(): Promise<void> {
       apiKey,
     );
     const profile = profileResponse.data;
-    const candidateFullName =
-      user.fullName || getFullName(user.email || profile.email, profile.name);
-    const storedFullName =
-      candidateFullName?.trim().toLowerCase() ===
-      profile.name.trim().toLowerCase()
-        ? undefined
-        : candidateFullName;
-    const resolvedFullName = storedFullName || profile.name;
-
-    if (storedFullName) {
-      saveFullNameForProfile(profile.email, storedFullName, profile.name);
-    }
-
     setUserState({
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      fullName: storedFullName,
       customAvatarUrl: user.customAvatarUrl,
     });
     const bidsWithSeller = await hydrateBidsWithSeller(bidsResponse.data || []);
