@@ -36,7 +36,7 @@
       ></p>
 
       <form id="create-listing-form" class="space-y-7" novalidate>
-        <section>
+        <div>
           <p
             class="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-auction-red"
           >
@@ -88,9 +88,9 @@
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section>
+        <div>
           <p
             class="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-auction-red"
           >
@@ -147,7 +147,7 @@
               >
             </div>
           </div>
-        </section>
+        </div>
 
         <div>
           <label
@@ -165,7 +165,7 @@
           ></textarea>
         </div>
 
-        <section>
+        <div>
           <p
             class="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-auction-red"
           >
@@ -185,9 +185,9 @@
               required
             >
           </div>
-        </section>
+        </div>
 
-        <section>
+        <div>
           <label
             class="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-ink"
             for="media-url"
@@ -200,6 +200,16 @@
               type="url"
               placeholder="https://example.com/artwork.jpg"
             >
+            <button
+              id="add-media"
+              class="border border-line bg-white px-4 py-3 text-xs font-medium uppercase tracking-[0.15em]"
+              type="button"
+            >
+              Add
+            </button>
+          </div>
+          <div id="media-preview" class="mt-3 grid grid-cols-3 gap-2"></div>
+        </div>
             <button
               id="add-media"
               class="border border-line bg-white px-4 py-3 text-xs font-medium uppercase tracking-[0.15em]"
