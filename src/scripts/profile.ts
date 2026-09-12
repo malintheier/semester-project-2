@@ -103,6 +103,10 @@ function renderProfile(profile: Profile): void {
     bannerElement.src = profile.banner.url;
     bannerElement.alt = profile.banner.alt || `${displayName}'s banner`;
     bannerElement.classList.remove("hidden");
+  } else {
+    bannerElement.removeAttribute("src");
+    bannerElement.alt = "";
+    bannerElement.classList.add("hidden");
   }
 }
 

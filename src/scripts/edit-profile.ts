@@ -150,20 +150,19 @@ form.addEventListener("submit", async (event) => {
 
   try {
     const apiKey = await getOrCreateApiKey(token);
-    const response = await put<
-      ApiResponse<Profile>,
-      {
-        bio: string;
-        avatar?: { url: string; alt: string };
-        banner?: { url: string; alt: string };
-      }
-    >(
+    const payload: {
+      bio: string;
+      avatar: { url: string; alt: string };
+      banner: { url: string; alt: string };
+    } = {
+      bio,
+      avatar: { url: avatarUrl, alt: "" },
+      banner: { url: bannerUrl, alt: "" },
+    };
+
+    const response = await put<ApiResponse<Profile>, typeof payload>(
       `${API_BASE_URL}/${encodeURIComponent(profile.name)}`,
-      {
-        bio,
-        ...(avatarUrl ? { avatar: { url: avatarUrl, alt: "" } } : {}),
-        ...(bannerUrl ? { banner: { url: bannerUrl, alt: "" } } : {}),
-      },
+      payload,
       token,
       apiKey,
     );
