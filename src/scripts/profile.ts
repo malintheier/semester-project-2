@@ -1,7 +1,12 @@
 import { get } from "../api/get";
 import type { ApiResponse, Bid, Listing, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
-import { getUserState, setUserState, TOKEN_STORAGE_KEY } from "./user-state";
+import {
+  getFullName,
+  getUserState,
+  setUserState,
+  TOKEN_STORAGE_KEY,
+} from "./user-state";
 import "../styles/tailwind.css";
 
 const API_BASE_URL = "https://v2.api.noroff.dev/auction/profiles";
@@ -72,7 +77,8 @@ function getHighestBid(listing?: Listing): number {
 
 function renderProfile(profile: Profile): void {
   const user = getUserState();
-  const displayName = user?.fullName || profile.name;
+  const displayName =
+    user?.fullName || getFullName(profile.email) || profile.name;
 
   nameElement.textContent = displayName;
   metaElement.textContent = `@${profile.name}`;
@@ -246,7 +252,7 @@ async function loadProfile(): Promise<void> {
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      fullName: user.fullName,
+      fullName: user.fullName || getFullName(profile.email) || profile.name,
       customAvatarUrl: user.customAvatarUrl,
     });
     renderProfile(profile);
