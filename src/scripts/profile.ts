@@ -344,22 +344,19 @@ async function loadProfile(): Promise<void> {
       apiKey,
     );
     const profile = profileResponse.data;
-    const resolvedFullName =
-      resolveDisplayName(
-        user.fullName,
-        user.email || profile.email,
-        profile.name,
-      ) ||
-      getFullName(profile.email) ||
-      profile.name;
+    const storedFullName =
+      user.fullName || getFullName(user.email || profile.email);
+    const resolvedFullName = storedFullName || profile.name;
 
-    saveFullName(profile.email, resolvedFullName);
+    if (storedFullName) {
+      saveFullName(profile.email, storedFullName);
+    }
 
     setUserState({
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      fullName: resolvedFullName,
+      fullName: storedFullName,
       customAvatarUrl: user.customAvatarUrl,
     });
     const bidsWithSeller = await hydrateBidsWithSeller(bidsResponse.data || []);
