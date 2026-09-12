@@ -1,12 +1,8 @@
 import type { UserState } from "../types";
+import { getCustomAvatar } from "../scripts/user-state";
 
 function getInitials(name: string): string {
-  return name
-    .split(/[._\s-]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() || "")
-    .join("");
+  return name.trim().charAt(0).toUpperCase();
 }
 
 function getPageUrl(page: "home" | "create" | "profile" | "login"): string {
@@ -89,11 +85,15 @@ export function renderHeader(
     credits.className =
       "flex items-center gap-1.5 border border-line bg-card px-2.5 py-1 text-xs font-semibold sm:gap-2 sm:px-3 sm:py-1.5";
 
+    const marker = document.createElement("span");
+    marker.className = "text-auction-red";
+    marker.textContent = "◆";
+
     const amount = document.createElement("span");
     amount.setAttribute("data-user-credits", "");
     amount.textContent = String(user.credits);
 
-    credits.append(amount);
+    credits.append(marker, amount);
 
     const profileLink = document.createElement("a");
     profileLink.className =
@@ -101,10 +101,13 @@ export function renderHeader(
     profileLink.href = getPageUrl("profile");
     profileLink.setAttribute("aria-label", "My profile");
 
-    if (user.customAvatarUrl) {
+    const avatarUrl =
+      getCustomAvatar(user.email, user.name) ?? user.customAvatarUrl;
+
+    if (avatarUrl) {
       const avatar = document.createElement("img");
       avatar.className = "h-full w-full object-cover";
-      avatar.src = user.customAvatarUrl;
+      avatar.src = avatarUrl;
       avatar.alt = user.name;
       avatar.addEventListener("error", () => {
         avatar.remove();
