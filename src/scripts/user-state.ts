@@ -25,12 +25,14 @@ export function resolveDisplayName(
   profileEmail?: string,
   profileName?: string,
 ): string {
+  const normalizedProfileName = profileName?.trim().toLowerCase();
   const candidates = [
     preferredFullName,
     getFullName(profileEmail || ""),
-    getFullName(profileName || ""),
     profileName,
-  ];
+  ].filter(
+    (value) => !!value && value.trim().toLowerCase() !== normalizedProfileName,
+  );
 
   const resolved = candidates.find(
     (value): value is string => !!value && value.trim().length > 0,
@@ -89,13 +91,14 @@ export function saveFullName(email: string, fullName: string): void {
 }
 
 export function getFullName(email: string): string | undefined {
+  const names = getFullNameDirectory();
   const normalizedEmail = normalizeEmailKey(email);
 
   if (!normalizedEmail) {
     return undefined;
   }
 
-  return getFullNameDirectory()[normalizedEmail];
+  return names[normalizedEmail];
 }
 
 function getCustomAvatarDirectory(): Record<string, string> {

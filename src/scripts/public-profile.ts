@@ -109,14 +109,15 @@ function openListing(listing: Listing): void {
 
 function renderProfile(profile: Profile): void {
   const user = getUserState();
+  const isOwnProfile = user?.name?.toLowerCase() === profile.name.toLowerCase();
   const displayName =
-    resolveDisplayName(
-      user?.fullName,
-      user?.email || profile.email,
-      profile.name,
-    ) ||
-    getFullName(profile.email) ||
-    profile.name;
+    (isOwnProfile
+      ? resolveDisplayName(
+          user?.fullName,
+          user?.email || profile.email,
+          profile.name,
+        )
+      : getFullName(profile.email)) || profile.name;
 
   nameElement.textContent = displayName;
   metaElement.textContent = `@${profile.name}`;

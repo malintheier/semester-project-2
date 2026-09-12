@@ -344,8 +344,13 @@ async function loadProfile(): Promise<void> {
       apiKey,
     );
     const profile = profileResponse.data;
-    const storedFullName =
+    const candidateFullName =
       user.fullName || getFullName(user.email || profile.email);
+    const storedFullName =
+      candidateFullName?.trim().toLowerCase() ===
+      profile.name.trim().toLowerCase()
+        ? undefined
+        : candidateFullName;
     const resolvedFullName = storedFullName || profile.name;
 
     if (storedFullName) {

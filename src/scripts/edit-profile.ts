@@ -8,10 +8,8 @@ import {
   getCustomAvatar,
   getCustomBanner,
   getUserState,
-  resolveDisplayName,
   saveCustomAvatar,
   saveCustomBanner,
-  saveFullName,
   setUserState,
   TOKEN_STORAGE_KEY,
 } from "./user-state";
@@ -31,7 +29,6 @@ function requireElement<T extends Element>(selector: string): T {
 
 const form = requireElement<HTMLFormElement>("#edit-profile-form");
 const statusElement = requireElement<HTMLParagraphElement>("#edit-status");
-const displayNameElement = requireElement<HTMLInputElement>("#display-name");
 const bioElement = requireElement<HTMLTextAreaElement>("#bio");
 const avatarUrlElement = requireElement<HTMLInputElement>("#avatar-url");
 const bannerUrlElement = requireElement<HTMLInputElement>("#banner-url");
@@ -93,15 +90,12 @@ function updateBannerPreview(): void {
 
 function populateForm(data: Profile): void {
   const user = getUserState();
-  const fullName =
-    resolveDisplayName(user?.fullName, user?.email || data.email, data.name) ||
-    data.name;
+  const fullName = user?.fullName || data.name;
 
   const savedAvatarUrl =
     getCustomAvatar(data.email, data.name) ?? user?.customAvatarUrl;
   const savedBannerUrl = getCustomBanner(data.email, data.name);
 
-  displayNameElement.value = fullName;
   bioElement.value = data.bio || "";
   avatarUrlElement.value = savedAvatarUrl || "";
   initialAvatarUrl = avatarUrlElement.value;
@@ -190,14 +184,7 @@ form.addEventListener("submit", async (event) => {
     );
 
     profile = response.data;
-    const updatedFullName =
-      resolveDisplayName(
-        displayNameElement.value.trim() || undefined,
-        profile.email,
-        profile.name,
-      ) || profile.name;
-
-    saveFullName(profile.email, updatedFullName);
+    const currentUser = getUserState();
     const avatarWasChanged = avatarUrl !== originalAvatarUrl;
     const bannerWasChanged = bannerUrl !== originalBannerUrl;
 
@@ -217,7 +204,7 @@ form.addEventListener("submit", async (event) => {
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      fullName: updatedFullName,
+      fullName: currentUser?.fullName,
       customAvatarUrl: avatarUrl || undefined,
     });
     setStatus("Profile saved.");
