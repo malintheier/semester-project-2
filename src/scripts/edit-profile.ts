@@ -7,10 +7,11 @@ import {
   deleteCustomBanner,
   getCustomAvatar,
   getCustomBanner,
-  getFullName,
   getUserState,
+  resolveDisplayName,
   saveCustomAvatar,
   saveCustomBanner,
+  saveFullName,
   setUserState,
   TOKEN_STORAGE_KEY,
 } from "./user-state";
@@ -93,7 +94,8 @@ function updateBannerPreview(): void {
 function populateForm(data: Profile): void {
   const user = getUserState();
   const fullName =
-    user?.fullName || getFullName(user?.email || data.email) || data.name;
+    resolveDisplayName(user?.fullName, user?.email || data.email, data.name) ||
+    data.name;
 
   const savedAvatarUrl =
     getCustomAvatar(data.email, data.name) ?? user?.customAvatarUrl;
@@ -188,6 +190,14 @@ form.addEventListener("submit", async (event) => {
     );
 
     profile = response.data;
+    const updatedFullName =
+      resolveDisplayName(
+        displayNameElement.value.trim() || undefined,
+        profile.email,
+        profile.name,
+      ) || profile.name;
+
+    saveFullName(profile.email, updatedFullName);
     const avatarWasChanged = avatarUrl !== originalAvatarUrl;
     const bannerWasChanged = bannerUrl !== originalBannerUrl;
 
@@ -207,7 +217,7 @@ form.addEventListener("submit", async (event) => {
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      fullName: getUserState()?.fullName,
+      fullName: updatedFullName,
       customAvatarUrl: avatarUrl || undefined,
     });
     setStatus("Profile saved.");

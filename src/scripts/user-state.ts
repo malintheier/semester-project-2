@@ -16,6 +16,29 @@ function toNumber(value: unknown): number {
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
 }
 
+export function normalizeEmailKey(email: string | undefined): string {
+  return (email ?? "").trim().toLowerCase();
+}
+
+export function resolveDisplayName(
+  preferredFullName?: string,
+  profileEmail?: string,
+  profileName?: string,
+): string {
+  const candidates = [
+    preferredFullName,
+    getFullName(profileEmail || ""),
+    getFullName(profileName || ""),
+    profileName,
+  ];
+
+  const resolved = candidates.find(
+    (value): value is string => !!value && value.trim().length > 0,
+  );
+
+  return resolved?.trim() || "";
+}
+
 export function getUserState(): UserState | null {
   const raw = localStorage.getItem(USER_STORAGE_KEY);
 
@@ -54,13 +77,25 @@ function getFullNameDirectory(): Record<string, string> {
 }
 
 export function saveFullName(email: string, fullName: string): void {
+  const normalizedEmail = normalizeEmailKey(email);
+
+  if (!normalizedEmail || !fullName.trim()) {
+    return;
+  }
+
   const names = getFullNameDirectory();
-  names[email.toLowerCase()] = fullName;
+  names[normalizedEmail] = fullName.trim();
   localStorage.setItem(FULL_NAME_STORAGE_KEY, JSON.stringify(names));
 }
 
 export function getFullName(email: string): string | undefined {
-  return getFullNameDirectory()[email.toLowerCase()];
+  const normalizedEmail = normalizeEmailKey(email);
+
+  if (!normalizedEmail) {
+    return undefined;
+  }
+
+  return getFullNameDirectory()[normalizedEmail];
 }
 
 function getCustomAvatarDirectory(): Record<string, string> {

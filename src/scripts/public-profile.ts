@@ -1,7 +1,12 @@
 import { get } from "../api/get";
 import type { ApiResponse, Bid, Listing, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
-import { getUserState, TOKEN_STORAGE_KEY } from "./user-state";
+import {
+  getFullName,
+  getUserState,
+  resolveDisplayName,
+  TOKEN_STORAGE_KEY,
+} from "./user-state";
 import "../styles/tailwind.css";
 
 function getDisplayBannerUrl(profile: Profile): string | undefined {
@@ -103,11 +108,21 @@ function openListing(listing: Listing): void {
 }
 
 function renderProfile(profile: Profile): void {
-  nameElement.textContent = profile.name;
+  const user = getUserState();
+  const displayName =
+    resolveDisplayName(
+      user?.fullName,
+      user?.email || profile.email,
+      profile.name,
+    ) ||
+    getFullName(profile.email) ||
+    profile.name;
+
+  nameElement.textContent = displayName;
   metaElement.textContent = `@${profile.name}`;
   bioElement.textContent = profile.bio || "No bio added yet.";
   creditsElement.textContent = String(profile.credits ?? 0);
-  initialsElement.textContent = getInitials(profile.name);
+  initialsElement.textContent = getInitials(displayName);
 
   if (profile.avatar?.url) {
     avatarElement.src = profile.avatar.url;

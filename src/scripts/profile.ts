@@ -5,6 +5,7 @@ import {
   getCustomAvatar,
   getCustomBanner,
   getFullName,
+  resolveDisplayName,
   getUserState,
   saveFullName,
   setUserState,
@@ -161,8 +162,11 @@ async function hydrateBidsWithSeller(bids: Bid[]): Promise<Bid[]> {
 function renderProfile(profile: Profile): void {
   const user = getUserState();
   const displayName =
-    user?.fullName ||
-    getFullName(user?.email || profile.email) ||
+    resolveDisplayName(
+      user?.fullName,
+      user?.email || profile.email,
+      profile.name,
+    ) ||
     getFullName(profile.email) ||
     profile.name;
 
@@ -341,8 +345,11 @@ async function loadProfile(): Promise<void> {
     );
     const profile = profileResponse.data;
     const resolvedFullName =
-      user.fullName ||
-      getFullName(user.email) ||
+      resolveDisplayName(
+        user.fullName,
+        user.email || profile.email,
+        profile.name,
+      ) ||
       getFullName(profile.email) ||
       profile.name;
 
