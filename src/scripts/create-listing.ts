@@ -65,9 +65,9 @@ function renderMediaPreviews(): void {
 
     const removeButton = document.createElement("button");
     removeButton.className =
-      "absolute right-1 top-1 flex h-5 w-5 items-center justify-center bg-ink/70 text-xs text-white";
+      "absolute right-1 top-1 bg-ink/70 px-1.5 py-1 text-[10px] uppercase text-white";
     removeButton.type = "button";
-    removeButton.textContent = "x";
+    removeButton.textContent = "Remove";
     removeButton.setAttribute("aria-label", "Remove image");
     removeButton.addEventListener("click", () => {
       mediaUrls = mediaUrls.filter((mediaUrl) => mediaUrl !== url);
