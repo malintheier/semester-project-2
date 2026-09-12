@@ -18,7 +18,7 @@
         aria-live="polite"
       ></p>
       <div id="public-profile-content" class="hidden">
-        <section class="relative h-40 overflow-hidden bg-ink lg:h-[18rem]">
+        <div class="relative h-40 overflow-hidden bg-ink lg:h-[18rem]">
           <img
             id="public-profile-banner"
             class="absolute inset-0 z-20 hidden h-full w-full object-cover"
@@ -35,7 +35,7 @@
               <span>Profile</span>
             </div>
           </div>
-        </section>
+        </div>
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
           <div
             class="relative z-20 -mt-10 h-20 w-20 overflow-hidden border-[3px] border-paper bg-auction-red lg:-mt-12 lg:h-24 lg:w-24 lg:border-4"
@@ -58,7 +58,7 @@
               <h1
                 id="public-profile-name"
                 class="font-sans text-2xl font-bold"
-              ></h1>
+              >Publisher Profile</h1>
               <p
                 id="public-profile-meta"
                 class="mt-1 text-xs text-muted-ink"
@@ -80,13 +80,11 @@
               ></p>
             </div>
           </div>
-          <div class="mt-10 flex border-b border-line" role="tablist">
+          <div class="mt-10 flex border-b border-line">
             <button
               id="public-listings-tab"
               class="border-b-2 border-auction-red px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-auction-red"
               type="button"
-              role="tab"
-              aria-selected="true"
             >
               Listings
             </button>
@@ -94,21 +92,19 @@
               id="public-bids-tab"
               class="px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink"
               type="button"
-              role="tab"
-              aria-selected="false"
             >
               Bids
             </button>
           </div>
-          <section id="public-listings-panel" class="mt-8" role="tabpanel">
+          <div id="public-listings-panel" class="mt-8">
             <ul
               id="public-profile-listings"
               class="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12"
             ></ul>
-          </section>
-          <section id="public-bids-panel" class="mt-8 hidden" role="tabpanel">
+          </div>
+          <div id="public-bids-panel" class="mt-8 hidden">
             <ol id="public-profile-bids"></ol>
-          </section>
+          </div>
         </div>
       </div>
     </main>

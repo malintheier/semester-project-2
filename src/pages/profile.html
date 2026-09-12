@@ -19,7 +19,7 @@
       ></p>
 
       <div id="profile-content" class="hidden">
-        <section class="relative h-40 overflow-hidden bg-ink lg:h-[18rem]">
+        <div class="relative h-40 overflow-hidden bg-ink lg:h-[18rem]">
           <img
             id="profile-banner"
             class="absolute inset-0 z-20 hidden h-full w-full object-cover"
@@ -44,7 +44,7 @@
               Edit Profile
             </a>
           </div>
-        </section>
+        </div>
 
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
           <div
@@ -66,7 +66,7 @@
             class="mt-4 flex flex-col justify-between gap-5 sm:flex-row sm:items-start"
           >
             <div class="min-w-0 flex-1">
-              <h1 id="profile-name" class="font-sans text-2xl font-bold"></h1>
+              <h1 id="profile-name" class="font-sans text-2xl font-bold">Profile</h1>
               <p id="profile-meta" class="mt-1 text-xs text-muted-ink"></p>
               <p
                 id="profile-bio"
@@ -93,13 +93,11 @@
             </div>
           </div>
 
-          <div class="mt-10 flex border-b border-line" role="tablist">
+          <div class="mt-10 flex border-b border-line">
             <button
               id="listings-tab"
               class="border-b-2 border-auction-red px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-auction-red"
               type="button"
-              role="tab"
-              aria-selected="true"
             >
               My Listings
             </button>
@@ -107,22 +105,20 @@
               id="bids-tab"
               class="px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink"
               type="button"
-              role="tab"
-              aria-selected="false"
             >
               My Bids
             </button>
           </div>
 
-          <section id="listings-panel" class="mt-8" role="tabpanel">
+          <div id="listings-panel" class="mt-8">
             <ul
               id="profile-listings"
               class="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12"
             ></ul>
-          </section>
-          <section id="bids-panel" class="mt-8 hidden" role="tabpanel">
+          </div>
+          <div id="bids-panel" class="mt-8 hidden">
             <ol id="profile-bids"></ol>
-          </section>
+          </div>
         </div>
       </div>
     </main>
