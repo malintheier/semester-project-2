@@ -1,4 +1,8 @@
 {
   "html.format.wrapAttributes": "auto",
-  "html.format.indentInnerHtml": false
+  "html.format.indentInnerHtml": false,
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features",
+    "editor.formatOnSave": false
+  }
 }
