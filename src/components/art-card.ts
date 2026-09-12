@@ -89,12 +89,7 @@ export function createArtCard(listing: Listing): HTMLLIElement {
       "absolute right-3 top-3 bg-paper px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.15em] text-ink lg:right-4 lg:top-4 lg:px-3 lg:py-2 lg:text-xs lg:tracking-[0.2em]";
     category.textContent = formatCategory(listingCategory);
 
-    const medium = document.createElement("span");
-    medium.className =
-      "absolute bottom-3 left-3 text-xs font-semibold uppercase tracking-[0.15em] text-paper opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 lg:bottom-4 lg:left-4";
-    medium.textContent = formatCategory(listingCategory);
-
-    imageWrap.append(category, medium);
+    imageWrap.append(category);
   }
 
   const details = document.createElement("div");

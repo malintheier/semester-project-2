@@ -123,7 +123,15 @@ function formatDeadline(endsAt?: string): string {
 }
 
 function capitalize(value: string): string {
-  return `${value[0].toUpperCase()}${value.slice(1)}`;
+  return value
+    .split(/\s+/)
+    .map((word) => `${word[0]?.toUpperCase() || ""}${word.slice(1)}`)
+    .join(" ");
+}
+
+function getTagValue(listing: Listing, prefix: string): string | undefined {
+  const tag = listing.tags?.find((value) => value.startsWith(prefix));
+  return tag?.slice(prefix.length).trim() || undefined;
 }
 
 function filterAndSortListings(): Listing[] {
@@ -156,6 +164,7 @@ function renderFeatured(listing: Listing): void {
   const category = listing.tags?.find((tag) =>
     ["oil", "acrylic", "watercolor"].includes(tag.toLowerCase()),
   );
+  const surface = getTagValue(listing, "surface:");
   const id = listing.id ? `?id=${encodeURIComponent(listing.id)}` : "";
 
   featuredImage.src = image?.url || "";
@@ -163,7 +172,7 @@ function renderFeatured(listing: Listing): void {
   featuredTitle.textContent = listing.title || "Untitled artwork";
   featuredArtist.textContent = listing.seller?.name || "Arthaus publisher";
   featuredMedium.textContent = category
-    ? capitalize(category)
+    ? `${capitalize(category)}${surface ? ` on ${capitalize(surface)}` : ""}`
     : "Contemporary artwork";
   featuredBid.textContent = `${getCurrentBid(listing)} credits`;
   featuredBids.textContent = String(
