@@ -7,7 +7,7 @@ import {
   getFullName,
   resolveDisplayName,
   getUserState,
-  saveFullName,
+  saveFullNameForProfile,
   setUserState,
   TOKEN_STORAGE_KEY,
 } from "./user-state";
@@ -345,7 +345,7 @@ async function loadProfile(): Promise<void> {
     );
     const profile = profileResponse.data;
     const candidateFullName =
-      user.fullName || getFullName(user.email || profile.email);
+      user.fullName || getFullName(user.email || profile.email, profile.name);
     const storedFullName =
       candidateFullName?.trim().toLowerCase() ===
       profile.name.trim().toLowerCase()
@@ -354,7 +354,7 @@ async function loadProfile(): Promise<void> {
     const resolvedFullName = storedFullName || profile.name;
 
     if (storedFullName) {
-      saveFullName(profile.email, storedFullName);
+      saveFullNameForProfile(profile.email, storedFullName, profile.name);
     }
 
     setUserState({

@@ -79,6 +79,14 @@ function getFullNameDirectory(): Record<string, string> {
 }
 
 export function saveFullName(email: string, fullName: string): void {
+  saveFullNameForProfile(email, fullName);
+}
+
+export function saveFullNameForProfile(
+  email: string,
+  fullName: string,
+  profileName?: string,
+): void {
   const normalizedEmail = normalizeEmailKey(email);
 
   if (!normalizedEmail || !fullName.trim()) {
@@ -87,10 +95,18 @@ export function saveFullName(email: string, fullName: string): void {
 
   const names = getFullNameDirectory();
   names[normalizedEmail] = fullName.trim();
+
+  if (profileName?.trim()) {
+    names[`profile:${profileName.trim().toLowerCase()}`] = fullName.trim();
+  }
+
   localStorage.setItem(FULL_NAME_STORAGE_KEY, JSON.stringify(names));
 }
 
-export function getFullName(email: string): string | undefined {
+export function getFullName(
+  email: string,
+  profileName?: string,
+): string | undefined {
   const names = getFullNameDirectory();
   const normalizedEmail = normalizeEmailKey(email);
 
@@ -98,7 +114,12 @@ export function getFullName(email: string): string | undefined {
     return undefined;
   }
 
-  return names[normalizedEmail];
+  return (
+    names[normalizedEmail] ||
+    (profileName?.trim()
+      ? names[`profile:${profileName.trim().toLowerCase()}`]
+      : undefined)
+  );
 }
 
 function getCustomAvatarDirectory(): Record<string, string> {

@@ -117,7 +117,7 @@ function renderProfile(profile: Profile): void {
           user?.email || profile.email,
           profile.name,
         )
-      : getFullName(profile.email)) || profile.name;
+      : getFullName(profile.email, profile.name)) || profile.name;
 
   nameElement.textContent = displayName;
   metaElement.textContent = `@${profile.name}`;
