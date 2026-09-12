@@ -200,7 +200,7 @@ function renderMedia(listing: Listing): void {
 
   media.forEach((item, index) => {
     const button = document.createElement("button");
-    button.className = `h-[52px] w-[52px] overflow-hidden ${index === 0 ? "border-2 border-ink" : "border border-line"}`;
+    button.className = `h-[3.25rem] w-[3.25rem] overflow-hidden ${index === 0 ? "border-2 border-ink" : "border border-line"}`;
     button.type = "button";
 
     const thumbnail = document.createElement("img");
@@ -214,10 +214,10 @@ function renderMedia(listing: Listing): void {
       imageElement.alt = item.alt || listing.title || "Artwork image";
       thumbnailElement.querySelectorAll("button").forEach((buttonElement) => {
         buttonElement.className =
-          "h-[52px] w-[52px] overflow-hidden border border-line";
+          "h-[3.25rem] w-[3.25rem] overflow-hidden border border-line";
       });
       button.className =
-        "h-[52px] w-[52px] overflow-hidden border-2 border-ink";
+        "h-[3.25rem] w-[3.25rem] overflow-hidden border-2 border-ink";
     });
     thumbnailElement.appendChild(button);
   });
