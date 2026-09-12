@@ -89,15 +89,11 @@ export function renderHeader(
     credits.className =
       "flex items-center gap-1.5 border border-line bg-card px-2.5 py-1 text-xs font-semibold sm:gap-2 sm:px-3 sm:py-1.5";
 
-    const marker = document.createElement("span");
-    marker.className = "text-auction-red";
-    marker.textContent = "◆";
-
     const amount = document.createElement("span");
     amount.setAttribute("data-user-credits", "");
     amount.textContent = String(user.credits);
 
-    credits.append(marker, amount);
+    credits.append(amount);
 
     const profileLink = document.createElement("a");
     profileLink.className =
@@ -123,7 +119,7 @@ export function renderHeader(
     logoutButton.className =
       "border border-line px-2 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-ink sm:px-3 sm:py-1.5 sm:text-xs sm:tracking-[0.15em]";
     logoutButton.type = "button";
-    logoutButton.textContent = "<- Log out";
+    logoutButton.textContent = "Log out";
     logoutButton.addEventListener("click", () => {
       onLogout();
       window.location.href = getPageUrl("home");
