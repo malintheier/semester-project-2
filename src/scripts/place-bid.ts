@@ -301,11 +301,11 @@ function renderListing(listing: Listing): void {
   const highestBid = getHighestBid(listing);
 
   titleElement.textContent = listing.title || "Untitled artwork";
-  artistElement.textContent = listing.seller?.name || "Arthaus artist";
+  artistElement.textContent = listing.seller?.name || "Arthaus publisher";
   artistElement.href = `./public-profile.html?name=${encodeURIComponent(listing.seller?.name || "")}`;
   descriptionElement.textContent =
     listing.description || "No description has been provided.";
-  detailArtistElement.textContent = listing.seller?.name || "Unknown";
+  detailArtistElement.textContent = listing.seller?.name || "Unknown publisher";
   detailMediumElement.textContent = category
     ? formatCategory(category)
     : "Not specified";

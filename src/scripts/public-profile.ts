@@ -138,7 +138,7 @@ function getBidArtistName(bid: Bid): string {
     return sellerName;
   }
 
-  return "Arthaus artist";
+  return "Arthaus publisher";
 }
 
 async function hydrateBidsWithSeller(bids: Bid[]): Promise<Bid[]> {
@@ -273,7 +273,7 @@ async function loadPublicProfile(): Promise<void> {
   const token = localStorage.getItem(TOKEN_STORAGE_KEY);
 
   if (!profileName) {
-    setStatus("Select an artist profile from a listing.", true);
+    setStatus("Select a publisher profile from a listing.", true);
     return;
   }
 
@@ -283,7 +283,7 @@ async function loadPublicProfile(): Promise<void> {
   }
 
   if (!token) {
-    setStatus("Log in to view artist profiles.", true);
+    setStatus("Log in to view publisher profiles.", true);
     return;
   }
 

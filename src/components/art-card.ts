@@ -104,7 +104,7 @@ export function createArtCard(listing: Listing): HTMLLIElement {
   artist.className =
     "cursor-pointer text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink hover:text-ink";
   artist.href = `./src/pages/public-profile.html?name=${encodeURIComponent(listing.seller?.name || "")}`;
-  artist.textContent = listing.seller?.name || "Arthaus artist";
+  artist.textContent = listing.seller?.name || "Arthaus publisher";
 
   const title = document.createElement("h3");
   title.className =

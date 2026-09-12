@@ -161,7 +161,7 @@ function renderFeatured(listing: Listing): void {
   featuredImage.src = image?.url || "";
   featuredImage.alt = image?.alt || listing.title || "Featured artwork";
   featuredTitle.textContent = listing.title || "Untitled artwork";
-  featuredArtist.textContent = listing.seller?.name || "Arthaus artist";
+  featuredArtist.textContent = listing.seller?.name || "Arthaus publisher";
   featuredMedium.textContent = category
     ? capitalize(category)
     : "Contemporary artwork";

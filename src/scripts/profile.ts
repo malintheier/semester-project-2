@@ -113,7 +113,7 @@ function getBidArtistName(bid: Bid): string {
     }
   }
 
-  return "Arthaus artist";
+  return "Arthaus publisher";
 }
 
 async function hydrateBidsWithSeller(bids: Bid[]): Promise<Bid[]> {

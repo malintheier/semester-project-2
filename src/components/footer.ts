@@ -67,7 +67,7 @@ export function renderFooter(): void {
   const tagline = document.createElement("p");
   tagline.className = "mt-4 max-w-xs text-sm leading-relaxed text-paper/40";
   tagline.textContent =
-    "A curated auction house for contemporary art. Connecting collectors with artists through bold, transparent bidding.";
+    "A curated auction house for contemporary art. Connecting collectors with publishers through bold, transparent bidding.";
   brand.append(logo, tagline);
 
   const columns = document.createElement("div");
