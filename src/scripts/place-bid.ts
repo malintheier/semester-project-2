@@ -37,6 +37,7 @@ const descriptionElement = requireElement<HTMLParagraphElement>(
   "#listing-description",
 );
 const detailArtistElement = requireElement<HTMLElement>("#detail-artist");
+const detailYearElement = requireElement<HTMLElement>("#detail-year");
 const detailMediumElement = requireElement<HTMLElement>("#detail-medium");
 const detailDimensionsElement =
   requireElement<HTMLElement>("#detail-dimensions");
@@ -306,6 +307,8 @@ function renderListing(listing: Listing): void {
   descriptionElement.textContent =
     listing.description || "No description has been provided.";
   detailArtistElement.textContent = listing.seller?.name || "Unknown publisher";
+  const year = getTagValue(listing, "year");
+  detailYearElement.textContent = year || "Not specified";
   detailMediumElement.textContent = category
     ? formatCategory(category)
     : "Not specified";
