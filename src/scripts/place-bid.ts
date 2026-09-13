@@ -42,7 +42,6 @@ const detailMediumElement = requireElement<HTMLElement>("#detail-medium");
 const detailDimensionsElement =
   requireElement<HTMLElement>("#detail-dimensions");
 const detailSurfaceElement = requireElement<HTMLElement>("#detail-surface");
-const detailDeadlineElement = requireElement<HTMLElement>("#detail-deadline");
 const detailBidsElement = requireElement<HTMLElement>("#detail-bids");
 const currentBidElement = requireElement<HTMLParagraphElement>("#current-bid");
 const creditsElement = requireElement<HTMLSpanElement>("#your-credits");
@@ -320,7 +319,6 @@ function renderListing(listing: Listing): void {
   detailSurfaceElement.textContent = surface
     ? capitalize(surface)
     : "Not specified";
-  detailDeadlineElement.textContent = formatDate(listing.endsAt);
   detailBidsElement.textContent = String(
     listing._count?.bids ?? listing.bids?.length ?? 0,
   );
