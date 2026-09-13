@@ -10,6 +10,7 @@ import {
 import "../styles/tailwind.css";
 
 const API_BASE_URL = "https://v2.api.noroff.dev/auction/profiles";
+const LISTINGS_API_URL = "https://v2.api.noroff.dev/auction/listings";
 
 function requireElement<T extends Element>(selector: string): T {
   const element = document.querySelector<T>(selector);
@@ -178,7 +179,32 @@ async function hydrateBidsWithSeller(bids: Bid[]): Promise<Bid[]> {
   return enrichedBids;
 }
 
-function renderListings(listings: Listing[]): void {
+async function hydrateListingsWithBids(
+  listings: Listing[],
+  token: string,
+  apiKey: string,
+): Promise<Listing[]> {
+  return Promise.all(
+    listings.map(async (listing) => {
+      if (!listing.id || listing.bids) {
+        return listing;
+      }
+
+      try {
+        const response = await get<ApiResponse<Listing>>(
+          `${LISTINGS_API_URL}/${encodeURIComponent(listing.id)}?_bids=true`,
+          token,
+          apiKey,
+        );
+        return { ...listing, ...response.data };
+      } catch {
+        return listing;
+      }
+    }),
+  );
+}
+
+function renderListings(listings: Listing[], publisherName: string): void {
   listingsElement.innerHTML = "";
 
   if (!listings.length) {
@@ -200,15 +226,25 @@ function renderListings(listings: Listing[]): void {
     image.src = artwork.url;
     image.alt = artwork.alt;
 
+    const publisher = document.createElement("p");
+    publisher.className =
+      "mt-3 text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink";
+    publisher.textContent = listing.seller?.name || publisherName;
+
     const title = document.createElement("h2");
-    title.className = "mt-3 font-display text-base font-bold italic sm:text-lg";
+    title.className = "mt-1 font-display text-base font-bold italic sm:text-lg";
     title.textContent = listing.title || "Untitled artwork";
 
+    const bidLabel = document.createElement("p");
+    bidLabel.className =
+      "mt-2 text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink";
+    bidLabel.textContent = "Current Bid";
+
     const bid = document.createElement("p");
-    bid.className = "mt-2 border-t border-line pt-2 text-sm font-bold";
+    bid.className = "border-t border-line pt-2 text-sm font-bold";
     bid.textContent = `${getHighestBid(listing)} credits`;
 
-    button.append(image, title, bid);
+    button.append(image, publisher, title, bidLabel, bid);
     item.appendChild(button);
     listingsElement.appendChild(item);
   });
@@ -304,9 +340,14 @@ async function loadPublicProfile(): Promise<void> {
       apiKey,
     );
     const bidsWithSeller = await hydrateBidsWithSeller(bidsResponse.data || []);
+    const listingsWithBids = await hydrateListingsWithBids(
+      profileResponse.data.listings || [],
+      token,
+      apiKey,
+    );
 
     renderProfile(profileResponse.data);
-    renderListings(profileResponse.data.listings || []);
+    renderListings(listingsWithBids, profileResponse.data.name || profileName);
     renderBids(bidsWithSeller);
     contentElement.classList.remove("hidden");
     setStatus("");

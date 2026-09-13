@@ -12,6 +12,7 @@ import {
 import "../styles/tailwind.css";
 
 const API_BASE_URL = "https://v2.api.noroff.dev/auction/profiles";
+const LISTINGS_API_URL = "https://v2.api.noroff.dev/auction/listings";
 
 function requireElement<T extends Element>(selector: string): T {
   const element = document.querySelector<T>(selector);
@@ -128,6 +129,31 @@ async function hydrateBidsWithSeller(bids: Bid[]): Promise<Bid[]> {
   );
 
   return enrichedBids;
+}
+
+async function hydrateListingsWithBids(
+  listings: Listing[],
+  token: string,
+  apiKey: string,
+): Promise<Listing[]> {
+  return Promise.all(
+    listings.map(async (listing) => {
+      if (!listing.id || listing.bids) {
+        return listing;
+      }
+
+      try {
+        const response = await get<ApiResponse<Listing>>(
+          `${LISTINGS_API_URL}/${encodeURIComponent(listing.id)}?_bids=true`,
+          token,
+          apiKey,
+        );
+        return { ...listing, ...response.data };
+      } catch {
+        return listing;
+      }
+    }),
+  );
 }
 
 function getDisplayBannerUrl(profile: Profile): string | undefined {
@@ -315,6 +341,11 @@ async function loadProfile(): Promise<void> {
       apiKey,
     );
     const profile = profileResponse.data;
+    const listingsWithBids = await hydrateListingsWithBids(
+      profile.listings || [],
+      token,
+      apiKey,
+    );
     const customAvatarUrl = getCustomAvatar(profile.email, profile.name);
     setUserState({
       name: profile.name,
@@ -325,7 +356,7 @@ async function loadProfile(): Promise<void> {
     const bidsWithSeller = await hydrateBidsWithSeller(bidsResponse.data || []);
 
     renderProfile(profile);
-    renderListings(profile.listings || [], profile.name);
+    renderListings(listingsWithBids, profile.name);
     renderBids(bidsWithSeller);
     contentElement.classList.remove("hidden");
     setStatus("");
