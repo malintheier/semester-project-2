@@ -52,26 +52,20 @@ function setStatus(text: string, isError = false): void {
     : "mb-8 border border-success bg-success/10 p-4 text-sm font-medium text-success";
 }
 
-function getInitials(name: string): string {
-  return name
-    .split(/[._\s-]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() || "")
-    .join("");
-}
-
 function updateAvatarPreview(): void {
   const url = avatarUrlElement.value.trim();
 
   if (!url) {
+    avatarPreviewElement.removeAttribute("src");
     avatarPreviewElement.classList.add("hidden");
-    avatarInitialsElement.classList.remove("hidden");
+    avatarInitialsElement.textContent = "";
+    avatarInitialsElement.classList.add("hidden");
     return;
   }
 
   avatarPreviewElement.src = url;
   avatarPreviewElement.classList.remove("hidden");
+  avatarInitialsElement.textContent = "";
   avatarInitialsElement.classList.add("hidden");
 }
 
@@ -99,7 +93,8 @@ function populateForm(data: Profile): void {
   avatarUrlElement.value = savedAvatarUrl || "";
   initialAvatarUrl = avatarUrlElement.value;
   bannerUrlElement.value = savedBannerUrl || "";
-  avatarInitialsElement.textContent = getInitials(data.name);
+  avatarInitialsElement.textContent = "";
+  avatarInitialsElement.classList.add("hidden");
   updateAvatarPreview();
   updateBannerPreview();
 }

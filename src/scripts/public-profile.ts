@@ -17,15 +17,7 @@ function getDisplayBannerUrl(profile: Profile): string | undefined {
   }
 
   const serverBannerUrl = profile.banner?.url?.trim();
-  if (!serverBannerUrl) {
-    return undefined;
-  }
-
-  const isDefaultBanner =
-    serverBannerUrl === "https://images.unsplash.com/" ||
-    serverBannerUrl.includes("images.unsplash.com");
-
-  return isDefaultBanner ? undefined : serverBannerUrl;
+  return serverBannerUrl || undefined;
 }
 
 const API_BASE_URL = "https://v2.api.noroff.dev/auction/profiles";
@@ -84,10 +76,6 @@ function setStatus(text: string, isError = false): void {
     : "hidden";
 }
 
-function getInitials(name: string): string {
-  return name.trim().charAt(0).toUpperCase();
-}
-
 function getImage(listing?: Listing): { url: string; alt: string } {
   const media = listing?.media?.find((item) => item.url);
   return {
@@ -111,50 +99,33 @@ function openListing(listing: Listing): void {
 function renderProfile(profile: Profile): void {
   const displayName = profile.name;
 
-  avatarElement.src =
-    "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+  avatarElement.removeAttribute("src");
   avatarElement.alt = "";
   avatarElement.classList.add("hidden");
-  initialsElement.classList.remove("hidden");
+  initialsElement.classList.add("hidden");
 
-  bannerElement.src =
-    "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+  bannerElement.removeAttribute("src");
   bannerElement.alt = "";
   bannerElement.classList.add("hidden");
-  defaultBannerElement.classList.remove("hidden");
+  defaultBannerElement.classList.add("hidden");
 
   nameElement.textContent = `@${displayName}`;
   metaElement.textContent = profile.email;
   bioElement.textContent = profile.bio || "No bio added yet.";
   creditsElement.textContent = String(profile.credits ?? 0);
-  initialsElement.textContent = getInitials(displayName);
 
   const customAvatarUrl = getCustomAvatar(profile.email, profile.name);
-  const profileAvatarUrl = profile.avatar?.url?.trim();
-  const fallbackAvatarUrl =
-    profileAvatarUrl &&
-    !profileAvatarUrl.includes("images.unsplash.com") &&
-    profileAvatarUrl !== "https://images.unsplash.com/"
-      ? profileAvatarUrl
-      : undefined;
-  const activeAvatarUrl = customAvatarUrl || fallbackAvatarUrl;
+  const avatarUrl = customAvatarUrl || profile.avatar?.url?.trim();
 
-  if (activeAvatarUrl) {
-    avatarElement.src = activeAvatarUrl;
+  if (avatarUrl) {
+    avatarElement.src = avatarUrl;
     avatarElement.alt = profile.avatar?.alt || `${profile.name}'s avatar`;
     avatarElement.onerror = () => {
       avatarElement.removeAttribute("src");
       avatarElement.alt = "";
       avatarElement.classList.add("hidden");
-      initialsElement.classList.remove("hidden");
     };
     avatarElement.classList.remove("hidden");
-    initialsElement.classList.add("hidden");
-  } else {
-    avatarElement.removeAttribute("src");
-    avatarElement.alt = "";
-    avatarElement.classList.add("hidden");
-    initialsElement.classList.remove("hidden");
   }
 
   const bannerUrl = getDisplayBannerUrl(profile);
@@ -163,12 +134,6 @@ function renderProfile(profile: Profile): void {
     bannerElement.src = bannerUrl;
     bannerElement.alt = profile.banner?.alt || `${profile.name}'s banner`;
     bannerElement.classList.remove("hidden");
-    defaultBannerElement.classList.add("hidden");
-  } else {
-    bannerElement.removeAttribute("src");
-    bannerElement.alt = "";
-    bannerElement.classList.add("hidden");
-    defaultBannerElement.classList.remove("hidden");
   }
 }
 
