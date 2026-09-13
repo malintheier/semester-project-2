@@ -206,6 +206,43 @@ export function deleteCustomAvatar(email: string, profileName?: string): void {
   localStorage.setItem(CUSTOM_AVATAR_STORAGE_KEY, JSON.stringify(avatars));
 }
 
+export function clearOtherProfileMedia(
+  currentEmail: string,
+  currentProfileName?: string,
+): void {
+  const avatars = getCustomAvatarDirectory();
+  const banners = getCustomBannerDirectory();
+  const currentKeys = [
+    normalizeEmailKey(currentEmail),
+    currentProfileName?.trim().toLowerCase(),
+  ].filter(Boolean) as string[];
+
+  const filteredAvatars = Object.fromEntries(
+    Object.entries(avatars).filter(([key]) => currentKeys.includes(key)),
+  );
+  const filteredBanners = Object.fromEntries(
+    Object.entries(banners).filter(([key]) => currentKeys.includes(key)),
+  );
+
+  if (Object.keys(filteredAvatars).length) {
+    localStorage.setItem(
+      CUSTOM_AVATAR_STORAGE_KEY,
+      JSON.stringify(filteredAvatars),
+    );
+  } else {
+    localStorage.removeItem(CUSTOM_AVATAR_STORAGE_KEY);
+  }
+
+  if (Object.keys(filteredBanners).length) {
+    localStorage.setItem(
+      CUSTOM_BANNER_STORAGE_KEY,
+      JSON.stringify(filteredBanners),
+    );
+  } else {
+    localStorage.removeItem(CUSTOM_BANNER_STORAGE_KEY);
+  }
+}
+
 function getCustomBannerDirectory(): Record<string, string> {
   const raw = localStorage.getItem(CUSTOM_BANNER_STORAGE_KEY);
 

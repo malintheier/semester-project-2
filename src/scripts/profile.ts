@@ -2,6 +2,7 @@ import { get } from "../api/get";
 import type { ApiResponse, Bid, Listing, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
 import {
+  clearOtherProfileMedia,
   getCustomAvatar,
   getCustomBanner,
   getUserState,
@@ -334,6 +335,10 @@ async function loadProfile(): Promise<void> {
       `${API_BASE_URL}/${encodeURIComponent(user.name)}?_listings=true`,
       token,
       apiKey,
+    );
+    clearOtherProfileMedia(
+      profileResponse.data.email,
+      profileResponse.data.name,
     );
     const bidsResponse = await get<ApiResponse<Bid[]>>(
       `${API_BASE_URL}/${encodeURIComponent(user.name)}/bids?_listings=true&_seller=true`,
