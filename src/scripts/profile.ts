@@ -217,11 +217,16 @@ function renderListings(listings: Listing[], profileName: string): void {
     title.className = "mt-1 font-display text-base font-bold italic sm:text-lg";
     title.textContent = listing.title || "Untitled artwork";
 
+    const bidLabel = document.createElement("p");
+    bidLabel.className =
+      "mt-2 text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink";
+    bidLabel.textContent = "Current Bid";
+
     const bid = document.createElement("p");
-    bid.className = "mt-2 border-t border-line pt-2 text-sm font-bold";
+    bid.className = "border-t border-line pt-2 text-sm font-bold";
     bid.textContent = `${getHighestBid(listing)} credits`;
 
-    button.append(image, artist, title, bid);
+    button.append(image, artist, title, bidLabel, bid);
     item.appendChild(button);
     listingsElement.appendChild(item);
   });
