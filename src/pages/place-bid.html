@@ -11,27 +11,26 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   </head>
   <body class="bg-paper font-sans text-ink">
-    <main class="mx-auto max-w-7xl px-4 pb-24 pt-0 sm:px-6 lg:px-10 lg:py-20">
-      <a
-        class="relative z-10 inline-block bg-ink px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-paper lg:mb-10 lg:bg-transparent lg:px-0 lg:py-0 lg:text-ink"
-        href="../../index.html"
-      >
-        Back to Browse
-      </a>
-
+    <main class="mx-auto -mt-6 max-w-7xl px-0 pb-24 pt-0 sm:mt-0 sm:px-6 lg:px-10 lg:py-20">
       <p
         id="listing-status"
-        class="mt-6 text-sm"
+        class="absolute left-4 top-4 z-20 text-sm sm:left-6 lg:static lg:mb-10 lg:mt-6"
         role="status"
         aria-live="polite"
       ></p>
 
       <div
         id="listing-content"
-        class="hidden lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-16 xl:gap-24"
+        class="hidden grid-cols-1 lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-16 xl:gap-24"
       >
-        <div class="min-w-0">
-          <div class="relative aspect-[4/5] overflow-hidden bg-stone-200">
+        <div class="contents min-w-0 lg:block">
+          <div class="relative order-1 aspect-4/5 overflow-hidden bg-stone-200 lg:order-0">
+            <a
+              class="absolute left-3 top-3 z-10 inline-block border border-paper/20 bg-ink/65 px-3 py-2 text-xs font-medium uppercase tracking-widest text-paper/90 lg:left-0 lg:-top-12 lg:border-0 lg:bg-transparent lg:px-0 lg:py-0 lg:text-ink"
+              href="../../index.html"
+            >
+              Back
+            </a>
             <img
               id="listing-image"
               class="h-full w-full object-cover"
@@ -40,151 +39,154 @@
             >
             <span
               id="listing-category"
-              class="absolute right-4 top-4 hidden bg-paper px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em]"
+              class="absolute right-3 top-3 hidden bg-paper px-2 py-1 text-xs font-medium uppercase tracking-widest text-muted-ink"
             ></span>
           </div>
 
-          <div id="thumbnail-strip" class="mt-3 flex gap-3"></div>
+          <div
+            id="thumbnail-strip"
+            class="order-2 flex gap-2 border-b border-line bg-card px-4 py-3 lg:order-0 lg:mt-3 lg:border-0 lg:bg-transparent lg:px-0 lg:py-0"
+          ></div>
 
-          <section class="mt-10">
-            <h2 class="font-display text-2xl font-bold italic">
+          <section class="order-10 border-t border-line px-4 py-6 lg:order-0 lg:mt-10 lg:border-0 lg:px-0 lg:py-0">
+            <h2 class="font-display text-base font-bold lg:text-2xl lg:italic">
               About the Work
             </h2>
             <p
               id="listing-description"
-              class="mt-4 max-w-2xl leading-7 text-muted-ink"
+              class="mt-3 max-w-2xl text-sm leading-relaxed text-muted-ink lg:mt-4 lg:text-base lg:leading-7"
             ></p>
           </section>
 
-          <dl class="mt-10 grid grid-cols-2 border-t border-line">
-            <div class="border-b border-line py-4">
+          <dl class="order-11 mt-0 grid grid-cols-2 gap-3 border-t border-line px-4 py-0 lg:order-0 lg:mt-10 lg:gap-0 lg:px-0">
+            <div class="border-b border-line py-2.5 lg:py-4">
               <dt
-                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+                class="text-xs font-medium uppercase tracking-widest text-muted-ink lg:text-[10px] lg:font-semibold lg:tracking-[0.2em]"
               >
                 Publisher
               </dt>
-              <dd id="detail-artist" class="mt-1"></dd>
+              <dd id="detail-artist" class="mt-1 text-sm font-semibold lg:text-base lg:font-normal"></dd>
             </div>
-            <div class="border-b border-line py-4">
+            <div class="border-b border-line py-2.5 lg:py-4">
               <dt
-                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+                class="text-xs font-medium uppercase tracking-widest text-muted-ink lg:text-[10px] lg:font-semibold lg:tracking-[0.2em]"
               >
                 Medium
               </dt>
-              <dd id="detail-medium" class="mt-1"></dd>
+              <dd id="detail-medium" class="mt-1 text-sm font-semibold lg:text-base lg:font-normal"></dd>
             </div>
-            <div class="border-b border-line py-4">
+            <div class="border-b border-line py-2.5 lg:py-4">
               <dt
-                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+                class="text-xs font-medium uppercase tracking-widest text-muted-ink lg:text-[10px] lg:font-semibold lg:tracking-[0.2em]"
               >
                 Dimensions
               </dt>
-              <dd id="detail-dimensions" class="mt-1"></dd>
+              <dd id="detail-dimensions" class="mt-1 text-sm font-semibold lg:text-base lg:font-normal"></dd>
             </div>
-            <div class="border-b border-line py-4">
+            <div class="border-b border-line py-2.5 lg:py-4">
               <dt
-                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+                class="text-xs font-medium uppercase tracking-widest text-muted-ink lg:text-[10px] lg:font-semibold lg:tracking-[0.2em]"
               >
                 Surface
               </dt>
-              <dd id="detail-surface" class="mt-1"></dd>
+              <dd id="detail-surface" class="mt-1 text-sm font-semibold lg:text-base lg:font-normal"></dd>
             </div>
-            <div class="border-b border-line py-4">
+            <div class="border-b-0 border-line py-2.5 lg:border-b lg:py-4">
               <dt
-                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+                class="text-xs font-medium uppercase tracking-widest text-muted-ink lg:text-[10px] lg:font-semibold lg:tracking-[0.2em]"
               >
                 Deadline
               </dt>
-              <dd id="detail-deadline" class="mt-1"></dd>
+              <dd id="detail-deadline" class="mt-1 text-sm font-semibold lg:text-base lg:font-normal"></dd>
             </div>
-            <div class="border-b border-line py-4">
+            <div class="border-b-0 border-line py-2.5 lg:border-b lg:py-4">
               <dt
-                class="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-ink"
+                class="text-xs font-medium uppercase tracking-widest text-muted-ink lg:text-[10px] lg:font-semibold lg:tracking-[0.2em]"
               >
                 Bids
               </dt>
-              <dd id="detail-bids" class="mt-1"></dd>
+              <dd id="detail-bids" class="mt-1 text-sm font-semibold lg:text-base lg:font-normal"></dd>
             </div>
           </dl>
         </div>
 
-        <aside class="mt-8 lg:sticky lg:top-24 lg:mt-0 lg:self-start">
+        <aside class="contents lg:sticky lg:top-24 lg:block lg:self-start">
           <p
-            class="text-xs font-semibold uppercase tracking-[0.2em] text-auction-red"
+            class="order-3 px-4 pt-5 text-xs font-medium uppercase tracking-[0.3em] text-auction-red lg:order-0 lg:px-0 lg:pt-0 lg:font-semibold lg:tracking-[0.2em]"
           >
             Live Auction
           </p>
           <h1
             id="listing-title"
-            class="mt-3 font-display text-3xl font-black italic leading-tight sm:text-4xl"
+            class="order-4 px-4 pt-1 font-display text-2xl font-black italic leading-tight lg:order-0 lg:mt-3 lg:px-0 lg:pt-0 lg:text-3xl sm:text-4xl"
           >
             Artwork Details
           </h1>
           <a
             id="listing-artist"
-            class="mt-3 inline-block font-display text-lg italic text-muted-ink hover:text-ink"
+            class="order-5 px-4 pt-1 font-serif text-base italic text-muted-ink hover:underline lg:order-0 lg:mt-3 lg:inline-block lg:px-0 lg:pt-0 lg:font-display lg:text-lg lg:hover:no-underline lg:hover:text-ink"
           ></a>
 
           <div
-            class="mt-8 grid grid-cols-4 divide-x divide-white/10 bg-ink p-4 text-paper"
+            class="order-6 mx-4 mb-5 mt-5 grid grid-cols-4 gap-2 bg-ink p-4 text-paper lg:order-0 lg:mx-0 lg:mt-8 lg:gap-0 lg:divide-x lg:divide-white/10"
           >
-            <div class="text-center">
+            <div class="bg-paper/5 py-2 text-center">
               <span
                 id="countdown-days"
-                class="block font-display text-2xl font-black"
+                class="block font-display text-xl font-black lg:text-2xl"
                 >00</span
               ><span
-                class="text-[10px] uppercase tracking-[0.15em] text-paper/60"
+                class="text-xs uppercase text-paper/40 lg:text-[10px] lg:tracking-[0.15em]"
                 >Days</span
               >
             </div>
-            <div class="text-center">
+            <div class="bg-paper/5 py-2 text-center">
               <span
                 id="countdown-hours"
-                class="block font-display text-2xl font-black"
+                class="block font-display text-xl font-black lg:text-2xl"
                 >00</span
               ><span
-                class="text-[10px] uppercase tracking-[0.15em] text-paper/60"
+                class="text-xs uppercase text-paper/40 lg:text-[10px] lg:tracking-[0.15em]"
                 >Hours</span
               >
             </div>
-            <div class="text-center">
+            <div class="bg-paper/5 py-2 text-center">
               <span
                 id="countdown-minutes"
-                class="block font-display text-2xl font-black"
+                class="block font-display text-xl font-black lg:text-2xl"
                 >00</span
               ><span
-                class="text-[10px] uppercase tracking-[0.15em] text-paper/60"
+                class="text-xs uppercase text-paper/40 lg:text-[10px] lg:tracking-[0.15em]"
                 >Mins</span
               >
             </div>
-            <div class="text-center">
+            <div class="bg-paper/5 py-2 text-center">
               <span
                 id="countdown-seconds"
-                class="block font-display text-2xl font-black"
+                class="block font-display text-xl font-black lg:text-2xl"
                 >00</span
               ><span
-                class="text-[10px] uppercase tracking-[0.15em] text-paper/60"
+                class="text-xs uppercase text-paper/40 lg:text-[10px] lg:tracking-[0.15em]"
                 >Secs</span
               >
             </div>
           </div>
 
-          <div class="mt-8 flex items-end justify-between gap-4">
+          <div class="order-7 mx-4 mb-5 flex items-end justify-between gap-4 border-b border-line pb-5 lg:order-0 lg:mx-0 lg:mb-0 lg:border-0 lg:pb-0">
             <div>
               <p
-                class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-ink"
+                class="text-xs font-medium uppercase tracking-widest text-muted-ink lg:font-semibold lg:tracking-[0.2em]"
               >
                 Current bid
               </p>
-              <p id="current-bid" class="mt-1 font-display text-4xl font-black">
+              <p id="current-bid" class="mt-1 font-display text-3xl font-black lg:text-4xl">
                 0
               </p>
             </div>
-            <p class="pb-1 text-right text-sm text-muted-ink">
+            <p class="pb-1 text-right text-xs text-muted-ink lg:text-sm">
               Your credits<br><span
                 id="your-credits"
-                class="font-semibold text-ink"
+                class="text-base font-bold text-ink lg:text-sm"
                 >0</span
               >
             </p>
@@ -192,42 +194,47 @@
 
           <p
             id="bid-message"
-            class="mt-6 hidden border border-success bg-success/10 px-4 py-3 text-sm text-success"
+            class="order-8 mx-4 mt-0 hidden border border-success bg-success/10 p-3 text-sm text-success lg:order-0 lg:mx-0 lg:mt-6 lg:px-4 lg:py-3"
             role="status"
             aria-live="polite"
           ></p>
 
-          <div id="bid-actions">
-            <form id="bid-form" class="mt-6">
+          <div id="bid-actions" class="order-9 px-4 lg:order-0 lg:px-0">
+            <form id="bid-form" class="mt-0 lg:mt-6">
               <label
-                class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-ink"
+                class="text-xs font-medium uppercase tracking-widest text-muted-ink lg:font-semibold lg:tracking-[0.2em]"
                 for="bid-amount"
                 >Your bid</label
               >
-              <input
-                id="bid-amount"
-                class="mt-2 w-full border border-line bg-card px-4 py-4 text-lg outline-none"
-                name="amount"
-                type="number"
-                min="1"
-                step="1"
-                required
-              >
+              <div class="mt-2 flex">
+                <span class="flex items-center border border-r-0 border-line bg-secondary px-3 text-sm">
+                  CR
+                </span>
+                <input
+                  id="bid-amount"
+                  class="w-full border border-line bg-card px-3 py-3 text-base outline-none lg:px-4 lg:py-4 lg:text-lg"
+                  name="amount"
+                  type="number"
+                  min="1"
+                  step="1"
+                  required
+                >
+              </div>
               <button
-                class="mt-3 w-full bg-auction-red px-5 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-paper"
+                class="mt-3 w-full bg-auction-red py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-paper lg:px-5 lg:py-4 lg:text-sm"
                 type="submit"
               >
                 Place Bid
               </button>
             </form>
-            <p class="mt-3 text-xs leading-5 text-muted-ink">
+            <p class="mt-3 text-center text-xs leading-5 text-muted-ink">
               Bids are binding. Please check your amount before placing a bid.
             </p>
           </div>
 
           <div
             id="listing-management"
-            class="mt-6 hidden border-t border-line pt-6"
+            class="order-12 mt-6 hidden border-t border-line px-4 pt-6 lg:order-0 lg:px-0"
           >
             <p
               class="text-xs font-semibold uppercase tracking-[0.2em] text-auction-red"
@@ -349,14 +356,14 @@
             </button>
           </div>
 
-          <section class="mt-10" aria-labelledby="bid-history-heading">
+          <section class="order-13 mt-6 border-t border-line px-4 py-6 lg:order-0 lg:mt-10 lg:border-0 lg:px-0 lg:py-0" aria-labelledby="bid-history-heading">
             <h2
               id="bid-history-heading"
-              class="font-display text-2xl font-bold italic"
+              class="text-xs font-medium uppercase tracking-widest text-muted-ink lg:font-display lg:text-2xl lg:font-bold lg:italic lg:normal-case lg:tracking-normal"
             >
               Bid History
             </h2>
-            <ol id="bid-history" class="mt-4"></ol>
+            <ol id="bid-history" class="mt-1 lg:mt-4"></ol>
           </section>
         </aside>
       </div>

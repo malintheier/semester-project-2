@@ -214,7 +214,7 @@ function renderMedia(listing: Listing): void {
       imageElement.alt = item.alt || listing.title || "Artwork image";
       thumbnailElement.querySelectorAll("button").forEach((buttonElement) => {
         buttonElement.className =
-          "h-[3.25rem] w-[3.25rem] overflow-hidden border border-line";
+          "h-[3.25rem] w-[3.25rem] overflow-hidden border-2 border-transparent";
       });
       button.className =
         "h-[3.25rem] w-[3.25rem] overflow-hidden border-2 border-ink";
@@ -335,6 +335,7 @@ function renderListing(listing: Listing): void {
   updateCountdown();
   window.clearInterval(countdownTimer);
   countdownTimer = window.setInterval(updateCountdown, 1000);
+  contentElement.classList.add("grid");
   contentElement.classList.remove("hidden");
 }
 
