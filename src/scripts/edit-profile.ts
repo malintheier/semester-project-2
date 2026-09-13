@@ -49,6 +49,9 @@ const bannerPreviewElement =
 let profile: Profile | null = null;
 let initialAvatarUrl = "";
 
+const NOROFF_DEFAULT_IMAGE =
+  "https://images.unsplash.com/photo-1579547945413-497e1b99dac0?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&h=500&w=1500";
+
 function setStatus(text: string, isError = false): void {
   statusElement.textContent = text;
   statusElement.className = isError
@@ -86,19 +89,20 @@ function updateBannerPreview(): void {
   bannerPreviewWrapElement.classList.remove("hidden");
 }
 
+function isNoroffDefaultImage(url?: string): boolean {
+  if (!url) return true;
+  return url.includes("photo-1579547945413-497e1b99dac0");
+}
+
 function populateForm(data: Profile): void {
   const savedAvatarUrl = getCustomAvatar(data.email, data.name);
   const savedBannerUrl = getCustomBanner(data.email, data.name);
 
-  const displayAvatarUrl =
-    savedAvatarUrl === "REMOVED"
-      ? ""
-      : savedAvatarUrl || data.avatar?.url || "";
+  const rawAvatar = savedAvatarUrl || data.avatar?.url || "";
+  const rawBanner = savedBannerUrl || data.banner?.url || "";
 
-  const displayBannerUrl =
-    savedBannerUrl === "REMOVED"
-      ? ""
-      : savedBannerUrl || data.banner?.url || "";
+  const displayAvatarUrl = isNoroffDefaultImage(rawAvatar) ? "" : rawAvatar;
+  const displayBannerUrl = isNoroffDefaultImage(rawBanner) ? "" : rawBanner;
 
   bioElement.value = data.bio || "";
   avatarUrlElement.value = displayAvatarUrl;
@@ -190,7 +194,7 @@ form.addEventListener("submit", async (event) => {
       saveCustomAvatar(profile.email, avatarUrl, profile.name);
     } else {
       payload.avatar = {
-        url: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&q=80&w=800",
+        url: NOROFF_DEFAULT_IMAGE,
         alt: "Default avatar",
       };
       deleteCustomAvatar(profile.email, profile.name);
@@ -201,7 +205,7 @@ form.addEventListener("submit", async (event) => {
       saveCustomBanner(profile.email, bannerUrl, profile.name);
     } else {
       payload.banner = {
-        url: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=1600",
+        url: NOROFF_DEFAULT_IMAGE,
         alt: "Default banner",
       };
       deleteCustomBanner(profile.email, profile.name);
