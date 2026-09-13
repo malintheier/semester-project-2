@@ -101,7 +101,9 @@ export function renderHeader(
     profileLink.href = getPageUrl("profile");
     profileLink.setAttribute("aria-label", "My profile");
 
-    const avatarUrl = getCustomAvatar(user.email, user.name) || user.avatarUrl;
+    const customAvatarUrl = getCustomAvatar(user.email, user.name);
+    const fallbackAvatarUrl = user.avatarUrl?.trim() || "";
+    const avatarUrl = customAvatarUrl || fallbackAvatarUrl;
 
     if (avatarUrl) {
       const avatar = document.createElement("img");

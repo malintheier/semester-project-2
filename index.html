@@ -115,7 +115,7 @@
               The Collection
             </h2>
           </div>
-          <div class="w-full max-w-xs">
+          <div class="w-full lg:w-auto lg:max-w-xs">
             <label class="sr-only" for="listings-search">Search listings</label>
             <input
               id="listings-search"
@@ -127,60 +127,60 @@
           </div>
         </div>
 
-        <div
-          class="mb-12 flex items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:gap-3"
-        >
-          <div id="category-filters" class="flex shrink-0 gap-2 sm:gap-3">
+        <div class="mb-6 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div id="category-filters" class="flex w-full gap-1 lg:w-auto lg:gap-2">
             <button
-              class="category-filter border border-line bg-transparent px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink"
+              class="category-filter flex-1 border border-line bg-transparent px-1 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink lg:flex-none lg:px-4"
               data-category="all"
               type="button"
             >
               All
             </button>
             <button
-              class="category-filter border border-line bg-transparent px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink"
+              class="category-filter flex-1 border border-line bg-transparent px-1 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink lg:flex-none lg:px-4"
               data-category="oil"
               type="button"
             >
               Oil
             </button>
             <button
-              class="category-filter border border-line bg-transparent px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink"
+              class="category-filter flex-1 border border-line bg-transparent px-1 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink lg:flex-none lg:px-4"
               data-category="acrylic"
               type="button"
             >
               Acrylic
             </button>
             <button
-              class="category-filter border border-line bg-transparent px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink"
+              class="category-filter flex-1 border border-line bg-transparent px-1 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink lg:flex-none lg:px-4"
               data-category="watercolor"
               type="button"
             >
               Watercolor
             </button>
           </div>
-          <label class="sr-only" for="listings-sort">Sort listings</label>
-          <select
-            id="listings-sort"
-            class="ml-auto shrink-0 border border-line bg-paper px-3 py-2 text-xs text-ink outline-none"
-            name="listings-sort"
-          >
-            <option value="ending-soon">Ending soon</option>
-            <option value="highest-bid">Highest bid</option>
-            <option value="lowest-bid">Lowest bid</option>
-          </select>
+          <div class="w-full lg:w-auto">
+            <label class="sr-only" for="listings-sort">Sort listings</label>
+            <select
+              id="listings-sort"
+              class="w-full border border-line bg-paper px-3 py-2 text-xs text-ink outline-none"
+              name="listings-sort"
+            >
+              <option value="ending-soon">Ending soon</option>
+              <option value="highest-bid">Highest bid</option>
+              <option value="lowest-bid">Lowest bid</option>
+            </select>
+          </div>
         </div>
 
         <p
           id="active-listings-status"
-          class="mb-6 text-sm text-muted-ink"
+          class="hidden mb-6 text-sm text-muted-ink"
           role="status"
           aria-live="polite"
         ></p>
         <ul
           id="active-listings"
-          class="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-14 xl:grid-cols-4"
+          class="mt-6 grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-3 lg:gap-x-8 lg:gap-y-12"
         ></ul>
         <button
           id="load-more-listings"

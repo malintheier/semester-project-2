@@ -4,7 +4,7 @@ import type { ApiResponse, Listing } from "../types";
 
 const API_LISTINGS_URL = "https://v2.api.noroff.dev/auction/listings";
 const APP_TAG = "arthaus";
-const LISTINGS_PER_PAGE = 12;
+const LISTINGS_PER_PAGE = 6;
 
 const listElementQuery =
   document.querySelector<HTMLUListElement>("#active-listings");
@@ -49,8 +49,8 @@ function updateCategoryButtonState(activeCategory: string): void {
   categoryButtons.forEach((categoryButton) => {
     const isSelected = categoryButton.dataset.category === activeCategory;
     categoryButton.className = isSelected
-      ? "category-filter border border-auction-red bg-auction-red px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] text-white"
-      : "category-filter border border-line bg-transparent px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink";
+      ? "category-filter flex-1 border border-auction-red bg-auction-red px-1 py-2 text-xs font-medium uppercase tracking-[0.15em] text-white lg:flex-none lg:px-4"
+      : "category-filter flex-1 border border-line bg-transparent px-1 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink lg:flex-none lg:px-4";
   });
 }
 
