@@ -85,6 +85,19 @@ function openListing(listing: Listing): void {
   window.location.href = `./place-bid.html${id}`;
 }
 
+function getDisplayBannerUrl(profile: Profile): string | undefined {
+  const customBannerUrl = getCustomBanner(profile.email, profile.name);
+  if (customBannerUrl === "REMOVED") {
+    return undefined;
+  }
+  if (customBannerUrl) {
+    return customBannerUrl;
+  }
+
+  const serverBannerUrl = profile.banner?.url?.trim();
+  return serverBannerUrl || undefined;
+}
+
 function renderProfile(profile: Profile): void {
   const displayName = profile.name;
 
@@ -103,7 +116,15 @@ function renderProfile(profile: Profile): void {
   creditsElement.textContent = String(profile.credits ?? 0);
 
   const customAvatarUrl = getCustomAvatar(profile.email, profile.name);
-  const avatarUrl = customAvatarUrl || profile.avatar?.url?.trim();
+  let avatarUrl: string | undefined;
+
+  if (customAvatarUrl === "REMOVED") {
+    avatarUrl = undefined;
+  } else if (customAvatarUrl) {
+    avatarUrl = customAvatarUrl;
+  } else {
+    avatarUrl = profile.avatar?.url?.trim();
+  }
 
   if (avatarUrl) {
     avatarElement.src = avatarUrl;
@@ -116,8 +137,7 @@ function renderProfile(profile: Profile): void {
     avatarElement.classList.remove("hidden");
   }
 
-  const customBannerUrl = getCustomBanner(profile.email, profile.name);
-  const bannerUrl = customBannerUrl || profile.banner?.url?.trim();
+  const bannerUrl = getDisplayBannerUrl(profile);
 
   if (bannerUrl) {
     bannerElement.src = bannerUrl;

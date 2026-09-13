@@ -32,6 +32,10 @@ const statusElement = requireElement<HTMLParagraphElement>("#edit-status");
 const bioElement = requireElement<HTMLTextAreaElement>("#bio");
 const avatarUrlElement = requireElement<HTMLInputElement>("#avatar-url");
 const bannerUrlElement = requireElement<HTMLInputElement>("#banner-url");
+const removeAvatarBtn =
+  document.querySelector<HTMLButtonElement>("#remove-avatar-btn");
+const removeBannerBtn =
+  document.querySelector<HTMLButtonElement>("#remove-banner-btn");
 const avatarPreviewElement =
   requireElement<HTMLImageElement>("#avatar-preview");
 const avatarInitialsElement =
@@ -83,16 +87,23 @@ function updateBannerPreview(): void {
 }
 
 function populateForm(data: Profile): void {
-  const user = getUserState();
-  const savedAvatarUrl =
-    getCustomAvatar(data.email, data.name) ?? data.avatar?.url;
-  const savedBannerUrl =
-    getCustomBanner(data.email, data.name) ?? data.banner?.url;
+  const savedAvatarUrl = getCustomAvatar(data.email, data.name);
+  const savedBannerUrl = getCustomBanner(data.email, data.name);
+
+  const displayAvatarUrl =
+    savedAvatarUrl === "REMOVED"
+      ? ""
+      : savedAvatarUrl || data.avatar?.url || "";
+
+  const displayBannerUrl =
+    savedBannerUrl === "REMOVED"
+      ? ""
+      : savedBannerUrl || data.banner?.url || "";
 
   bioElement.value = data.bio || "";
-  avatarUrlElement.value = savedAvatarUrl || "";
+  avatarUrlElement.value = displayAvatarUrl;
   initialAvatarUrl = avatarUrlElement.value;
-  bannerUrlElement.value = savedBannerUrl || "";
+  bannerUrlElement.value = displayBannerUrl;
   avatarInitialsElement.textContent = "";
   avatarInitialsElement.classList.add("hidden");
   updateAvatarPreview();
@@ -123,6 +134,20 @@ async function loadProfile(): Promise<void> {
       true,
     );
   }
+}
+
+if (removeAvatarBtn) {
+  removeAvatarBtn.addEventListener("click", () => {
+    avatarUrlElement.value = "";
+    updateAvatarPreview();
+  });
+}
+
+if (removeBannerBtn) {
+  removeBannerBtn.addEventListener("click", () => {
+    bannerUrlElement.value = "";
+    updateBannerPreview();
+  });
 }
 
 avatarUrlElement.addEventListener("input", updateAvatarPreview);
@@ -164,14 +189,14 @@ form.addEventListener("submit", async (event) => {
       payload.avatar = { url: avatarUrl, alt: "" };
       saveCustomAvatar(profile.email, avatarUrl, profile.name);
     } else {
-      deleteCustomAvatar(profile.email, profile.name);
+      saveCustomAvatar(profile.email, "REMOVED", profile.name);
     }
 
     if (bannerUrl) {
       payload.banner = { url: bannerUrl, alt: "" };
       saveCustomBanner(profile.email, bannerUrl, profile.name);
     } else {
-      deleteCustomBanner(profile.email, profile.name);
+      saveCustomBanner(profile.email, "REMOVED", profile.name);
     }
 
     const response = await put<ApiResponse<Profile>, typeof payload>(
@@ -187,7 +212,7 @@ form.addEventListener("submit", async (event) => {
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      avatarUrl: avatarUrl || profile.avatar?.url || undefined,
+      avatarUrl: avatarUrl || undefined,
     });
     setStatus("Profile saved.");
     window.setTimeout(() => {
