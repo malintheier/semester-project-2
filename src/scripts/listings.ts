@@ -42,6 +42,17 @@ let currentPage = 1;
 let hasMoreListings = true;
 let isLoading = false;
 let selectedCategory = "all";
+let featuredEndsAt: string | undefined;
+let featuredCountdownTimer: number | undefined;
+
+function updateCategoryButtonState(activeCategory: string): void {
+  categoryButtons.forEach((categoryButton) => {
+    const isSelected = categoryButton.dataset.category === activeCategory;
+    categoryButton.className = isSelected
+      ? "category-filter border border-auction-red bg-auction-red px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] text-white"
+      : "category-filter border border-line bg-transparent px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink";
+  });
+}
 
 if (
   !listElementQuery ||
@@ -119,7 +130,18 @@ function getCurrentBid(listing: Listing): number {
 
 function formatDeadline(endsAt?: string): string {
   const date = new Date(endsAt || "");
-  return Number.isNaN(date.getTime()) ? "Unknown" : date.toLocaleDateString();
+
+  if (Number.isNaN(date.getTime())) {
+    return "0H 0M 0S";
+  }
+
+  const remaining = Math.max(0, date.getTime() - Date.now());
+  const totalSeconds = Math.floor(remaining / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${hours}H ${minutes}M ${seconds}S`;
 }
 
 function capitalize(value: string): string {
@@ -159,6 +181,28 @@ function filterAndSortListings(): Listing[] {
   });
 }
 
+function renderFeaturedCountdown(): void {
+  if (!featuredEndsAt) {
+    featuredDeadline.innerHTML = `
+      <span class="inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-auction-red align-middle"></span>
+      <span class="text-auction-red">0H 0M 0S</span>
+    `;
+    return;
+  }
+
+  const date = new Date(featuredEndsAt);
+  const remaining = Math.max(0, date.getTime() - Date.now());
+  const totalSeconds = Math.floor(remaining / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  featuredDeadline.innerHTML = `
+    <span class="inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-auction-red align-middle"></span>
+    <span class="text-auction-red">${hours}H ${minutes}M ${seconds}S</span>
+  `;
+}
+
 function renderFeatured(listing: Listing): void {
   const image = listing.media?.find((item) => item.url);
   const category = listing.tags?.find((tag) =>
@@ -167,6 +211,7 @@ function renderFeatured(listing: Listing): void {
   const surface = getTagValue(listing, "surface:");
   const id = listing.id ? `?id=${encodeURIComponent(listing.id)}` : "";
 
+  featuredEndsAt = listing.endsAt;
   featuredImage.src = image?.url || "";
   featuredImage.alt = image?.alt || listing.title || "Featured artwork";
   featuredTitle.textContent = listing.title || "Untitled artwork";
@@ -175,11 +220,14 @@ function renderFeatured(listing: Listing): void {
     ? `${capitalize(category)}${surface ? ` on ${capitalize(surface)}` : ""}`
     : "Contemporary artwork";
   featuredBid.textContent = `${getCurrentBid(listing)} credits`;
-  featuredBids.textContent = String(
-    listing._count?.bids ?? listing.bids?.length ?? 0,
-  );
-  featuredDeadline.textContent = formatDeadline(listing.endsAt);
+  featuredBids.textContent = `${
+    listing._count?.bids ?? listing.bids?.length ?? 0
+  } registered`;
   featuredBidLink.href = `./src/pages/place-bid.html${id}`;
+
+  window.clearInterval(featuredCountdownTimer);
+  renderFeaturedCountdown();
+  featuredCountdownTimer = window.setInterval(renderFeaturedCountdown, 1000);
 }
 
 function getNewestListing(listings: Listing[]): Listing | undefined {
@@ -286,15 +334,12 @@ searchElement.addEventListener("input", () => {
 categoryButtons.forEach((button) => {
   button.addEventListener("click", () => {
     selectedCategory = button.dataset.category || "all";
-    categoryButtons.forEach((categoryButton) => {
-      const isSelected = categoryButton === button;
-      categoryButton.className = isSelected
-        ? "category-filter border border-auction-red bg-auction-red px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] text-white"
-        : "category-filter border border-line bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] text-muted-ink";
-    });
+    updateCategoryButtonState(selectedCategory);
     renderListings();
   });
 });
+
+updateCategoryButtonState(selectedCategory);
 
 sortElement.addEventListener("change", () => {
   renderListings();

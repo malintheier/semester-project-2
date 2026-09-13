@@ -13,18 +13,25 @@ function getCurrentBid(listing: Listing): number {
   }, 0);
 }
 
-function formatDeadline(endsAt?: string): string {
-  const date = new Date(endsAt || "");
+function formatCountdown(endsAt?: string): string {
+  const now = new Date();
+  const end = new Date(endsAt || "");
 
-  if (Number.isNaN(date.getTime())) {
-    return "Deadline unknown";
+  if (Number.isNaN(end.getTime())) {
+    return "00 00 00";
   }
 
-  return `Ends ${date.toLocaleDateString(undefined, {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  })}`;
+  const diff = end.getTime() - now.getTime();
+
+  if (diff <= 0) {
+    return "00 00 00";
+  }
+
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+  return `${String(hours).padStart(2, "0")}H ${String(minutes).padStart(2, "0")}M ${String(seconds).padStart(2, "0")}S`;
 }
 
 function getPrimaryImage(listing: Listing): { url: string; alt: string } {
@@ -53,75 +60,92 @@ export function createArtCard(listing: Listing): HTMLLIElement {
   const card = document.createElement("li");
   card.className = "min-w-0";
 
-  const button = document.createElement("button");
-  button.className = "group w-full text-left";
-  button.type = "button";
-  button.setAttribute("aria-label", `View ${listing.title || "artwork"}`);
-  button.addEventListener("click", () => {
-    const id = listing.id ? `?id=${encodeURIComponent(listing.id)}` : "";
-    window.location.href = `./src/pages/place-bid.html${id}`;
-  });
+  const cardContent = document.createElement("div");
+  cardContent.className = "w-full text-left";
 
+  // Image container with 4/5 aspect ratio
   const imageWrap = document.createElement("div");
   imageWrap.className =
-    "relative aspect-[3/4] overflow-hidden bg-stone-200 lg:aspect-[4/5]";
+    "group relative mb-4 aspect-[4/5] overflow-hidden bg-stone-200 cursor-pointer";
 
   const image = document.createElement("img");
   const primaryImage = getPrimaryImage(listing);
   image.className =
-    "h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 group-focus-visible:scale-105";
+    "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105";
   image.src = primaryImage.url;
   image.alt = primaryImage.alt;
   image.loading = "lazy";
 
+  // Hover overlay
   const overlay = document.createElement("div");
   overlay.className =
-    "absolute inset-0 bg-gradient-to-t from-ink/80 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100";
+    "absolute inset-0 bg-gradient-to-t from-[rgba(13,12,10,0.7)] to-transparent opacity-0 transition-opacity duration-400 group-hover:opacity-100";
   overlay.setAttribute("aria-hidden", "true");
 
   imageWrap.append(image, overlay);
 
+  // Category badge (top right)
   const listingCategory = getCategory(listing);
-
   if (listingCategory) {
-    const category = document.createElement("span");
-    category.className =
-      "absolute right-3 top-3 bg-paper px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.15em] text-ink lg:right-4 lg:top-4 lg:px-3 lg:py-2 lg:text-xs lg:tracking-[0.2em]";
-    category.textContent = formatCategory(listingCategory);
-
-    imageWrap.append(category);
+    const categoryBadge = document.createElement("span");
+    categoryBadge.className =
+      "absolute right-2 top-2 bg-paper px-2 py-1 text-xs font-medium uppercase tracking-widest text-muted-ink";
+    categoryBadge.textContent = formatCategory(listingCategory);
+    imageWrap.append(categoryBadge);
   }
 
-  const details = document.createElement("div");
-  details.className = "pt-3 lg:pt-4";
+  // Publisher name
+  const publisher = document.createElement("a");
+  publisher.className =
+    "inline-block text-xs font-medium uppercase tracking-widest text-muted-ink hover:opacity-60 transition-opacity mb-1";
+  publisher.href = `./src/pages/public-profile.html?name=${encodeURIComponent(listing.seller?.name || "")}`;
+  publisher.textContent = listing.seller?.name || "Arthaus publisher";
 
-  const artist = document.createElement("a");
-  artist.className =
-    "cursor-pointer text-xs font-semibold uppercase tracking-[0.15em] text-muted-ink hover:text-ink";
-  artist.href = `./src/pages/public-profile.html?name=${encodeURIComponent(listing.seller?.name || "")}`;
-  artist.textContent = listing.seller?.name || "Arthaus publisher";
-
+  // Title
   const title = document.createElement("h3");
-  title.className =
-    "mt-1 font-display text-sm font-bold italic sm:text-base lg:text-lg";
+  title.className = "font-display text-lg font-bold italic leading-tight mb-3";
   title.textContent = listing.title || "Untitled artwork";
 
-  const footer = document.createElement("div");
-  footer.className =
-    "mt-2 flex items-center justify-between gap-2 border-t border-line pt-2 text-xs font-bold lg:mt-3 lg:pt-3 lg:text-sm";
+  // Separator
+  const separator = document.createElement("hr");
+  separator.className = "border-t border-line pt-3 mb-2";
 
-  const bid = document.createElement("span");
-  bid.className = "text-ink";
-  bid.textContent = `${getCurrentBid(listing)} credits`;
+  // "Current bid" label
+  const bidLabel = document.createElement("p");
+  bidLabel.className =
+    "text-xs font-medium uppercase tracking-widest text-muted-ink mb-0.5";
+  bidLabel.textContent = "Current Bid";
 
-  const live = document.createElement("span");
-  live.className = "text-right text-auction-red";
-  live.textContent = formatDeadline(listing.endsAt);
+  // Bid value and countdown
+  const bidRow = document.createElement("div");
+  bidRow.className = "flex items-baseline justify-between gap-4";
 
-  footer.append(bid, live);
-  button.append(imageWrap, title, footer);
-  details.append(artist, button);
-  card.appendChild(details);
+  const bidValue = document.createElement("span");
+  bidValue.className = "text-lg font-bold text-ink";
+  bidValue.textContent = `${getCurrentBid(listing)} credits`;
+
+  const countdownBadge = document.createElement("span");
+  countdownBadge.className =
+    "text-xs font-bold uppercase tracking-widest text-auction-red";
+  countdownBadge.textContent = formatCountdown(listing.endsAt);
+
+  // Set up live countdown update
+  const countdownTimer = setInterval(() => {
+    countdownBadge.textContent = formatCountdown(listing.endsAt);
+  }, 1000);
+
+  // Clean up timer when card is removed
+  card.addEventListener("remove", () => clearInterval(countdownTimer));
+
+  // Make the entire card clickable
+  imageWrap.addEventListener("click", () => {
+    const id = listing.id ? `?id=${encodeURIComponent(listing.id)}` : "";
+    window.location.href = `./src/pages/place-bid.html${id}`;
+  });
+
+  bidRow.append(bidValue, countdownBadge);
+  cardContent.append(imageWrap, publisher, title, separator, bidLabel, bidRow);
+  card.appendChild(cardContent);
 
   return card;
 }
