@@ -3,6 +3,7 @@ import type { ApiResponse, LoginBody, LoginResponse } from "../types";
 import { getOrCreateApiKey } from "./api-key";
 import {
   STARTING_CREDITS,
+  NOROFF_DEFAULT_IMAGE,
   TOKEN_STORAGE_KEY,
   setUserState,
 } from "./user-state";
@@ -74,7 +75,7 @@ form.addEventListener("submit", async (event: SubmitEvent) => {
       name: response.data.name || "",
       email: response.data.email || email,
       credits: Number(response.data.credits ?? STARTING_CREDITS),
-      avatarUrl: response.data.avatar?.url || undefined,
+      avatarUrl: response.data.avatar?.url || NOROFF_DEFAULT_IMAGE,
     });
 
     form.classList.add("hidden");

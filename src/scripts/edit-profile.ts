@@ -8,6 +8,7 @@ import {
   getCustomAvatar,
   getCustomBanner,
   getUserState,
+  NOROFF_DEFAULT_IMAGE,
   saveCustomAvatar,
   saveCustomBanner,
   setUserState,
@@ -48,9 +49,6 @@ const bannerPreviewElement =
 
 let profile: Profile | null = null;
 let initialAvatarUrl = "";
-
-const NOROFF_DEFAULT_IMAGE =
-  "https://images.unsplash.com/photo-1579547945413-497e1b99dac0?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&h=500&w=1500";
 
 function setStatus(text: string, isError = false): void {
   statusElement.textContent = text;
@@ -224,7 +222,7 @@ form.addEventListener("submit", async (event) => {
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      avatarUrl: avatarUrl || undefined,
+      avatarUrl: avatarUrl || profile.avatar?.url || NOROFF_DEFAULT_IMAGE,
     });
     setStatus("Profile saved.");
     window.setTimeout(() => {

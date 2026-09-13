@@ -10,6 +10,8 @@ export const FULL_NAME_STORAGE_KEY = "arthaus_full_names";
 export const CUSTOM_AVATAR_STORAGE_KEY = "arthaus_custom_avatars";
 export const CUSTOM_BANNER_STORAGE_KEY = "arthaus_custom_banners";
 export const STARTING_CREDITS = 1000;
+export const NOROFF_DEFAULT_IMAGE =
+  "https://images.unsplash.com/photo-1579547945413-497e1b99dac0?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&h=500&w=1500";
 
 function toNumber(value: unknown): number {
   const parsed = Number(value);

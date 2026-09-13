@@ -5,6 +5,7 @@ import {
   getCustomAvatar,
   getCustomBanner,
   getUserState,
+  NOROFF_DEFAULT_IMAGE,
   setUserState,
   TOKEN_STORAGE_KEY,
 } from "./user-state";
@@ -314,7 +315,7 @@ async function loadProfile(): Promise<void> {
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      avatarUrl: customAvatarUrl || profile.avatar?.url || undefined,
+      avatarUrl: customAvatarUrl || profile.avatar?.url || NOROFF_DEFAULT_IMAGE,
     });
     const bidsWithSeller = await hydrateBidsWithSeller(bidsResponse.data || []);
 
