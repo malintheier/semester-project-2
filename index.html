@@ -17,7 +17,7 @@
     <main>
       <section
         id="featured-auction"
-        class="relative min-h-[420px] overflow-hidden bg-ink lg:min-h-[88vh]"
+        class="relative h-[420px] overflow-hidden bg-ink lg:min-h-[88vh]"
       >
         <img
           id="featured-image"
@@ -26,67 +26,67 @@
           alt=""
         >
         <div
-          class="absolute inset-0 bg-gradient-to-t from-ink via-ink/65 to-ink/20 lg:bg-gradient-to-r lg:from-ink lg:via-ink/55 lg:to-ink/15"
+          class="absolute inset-0 bg-gradient-to-t from-[rgba(13,12,10,0.97)_20%] via-[rgba(13,12,10,0.5)_50%] to-[rgba(13,12,10,0.3)_70%] lg:bg-gradient-to-r lg:from-ink lg:via-ink/55 lg:to-ink/15"
         ></div>
         <div
-          class="relative mx-auto flex min-h-[420px] max-w-7xl flex-col justify-end px-5 pb-6 pt-14 lg:min-h-[88vh] lg:px-10 lg:py-32"
+          class="absolute inset-x-0 bottom-0 flex flex-col px-5 pb-6 lg:relative lg:mx-auto lg:min-h-[88vh] lg:max-w-7xl lg:flex-col lg:justify-end lg:px-10 lg:py-32"
         >
           <p
-            class="text-xs font-semibold uppercase tracking-[0.3em] text-auction-red"
+            class="text-xs font-medium uppercase tracking-[0.3em] text-auction-red mb-0.5"
           >
             Live Auction · Featured Work
           </p>
           <h1
             id="featured-title"
-            class="mt-3 max-w-[14ch] font-display text-[2.4rem] font-black italic leading-none text-paper sm:text-6xl lg:text-8xl xl:text-9xl"
+            class="font-display text-[2.4rem] font-black italic leading-none text-paper mb-0.25 lg:mt-3 lg:max-w-[14ch] lg:mb-2 lg:text-6xl xl:text-8xl"
           >
             Featured artwork
           </h1>
           <p
             id="featured-artist"
-            class="mt-4 font-display text-lg italic text-paper/65"
+            class="font-serif italic text-sm text-paper/60 mb-1 lg:mt-4 lg:font-display lg:text-lg lg:text-paper/65"
           ></p>
-          <p id="featured-medium" class="mt-1 text-sm text-paper/40"></p>
+          <p id="featured-medium" class="hidden text-sm text-paper/40 lg:mt-1 lg:block"></p>
           <div
-            class="mt-6 flex flex-wrap items-end gap-x-8 gap-y-3 text-paper lg:mb-10"
+            class="mb-1 flex items-end gap-5 text-paper lg:mt-6 lg:mb-10 lg:flex-wrap lg:gap-x-8 lg:gap-y-3"
           >
-            <div class="min-w-[10.5rem]">
-              <p class="text-xs font-normal uppercase tracking-[0.2em] text-paper/40">
+            <div>
+              <p class="text-xs font-medium uppercase tracking-widest text-paper/40">
                 Current bid
               </p>
               <p
                 id="featured-bid"
-                class="mt-1.5 font-sans text-[1.5rem] font-bold leading-none"
+                class="mt-0.5 font-sans text-lg font-bold leading-none lg:mt-1.5 lg:text-[1.5rem]"
               ></p>
             </div>
-            <div class="min-w-[9.5rem]">
-              <p class="text-xs font-normal uppercase tracking-[0.2em] text-paper/40">
+            <div>
+              <p class="text-xs font-medium uppercase tracking-widest text-paper/40">
                 Bids
               </p>
               <p
                 id="featured-bids"
-                class="mt-1.5 font-sans text-[1.5rem] font-bold leading-none"
+                class="mt-0.5 font-sans text-lg font-bold leading-none lg:mt-1.5 lg:text-[1.5rem]"
               ></p>
             </div>
-            <div class="min-w-[11rem]">
-              <p class="text-xs font-normal uppercase tracking-[0.2em] text-paper/40">
+            <div>
+              <p class="text-xs font-medium uppercase tracking-widest text-paper/40">
                 Ends in
               </p>
               <p
                 id="featured-deadline"
-                class="mt-1.5 inline-flex items-center gap-2 font-sans text-[1.5rem] font-bold leading-none text-paper"
+                class="mt-0.5 inline-flex items-center gap-2 font-sans text-lg font-bold leading-none text-paper lg:mt-1.5 lg:text-[1.5rem]"
               ></p>
             </div>
           </div>
-          <div class="mt-6 flex flex-col gap-3 sm:flex-row lg:mt-0 lg:gap-4">
+          <div class="mt-6 flex flex-col gap-3 lg:mt-6 lg:flex-row lg:gap-4">
             <a
               id="featured-bid-link"
-              class="bg-auction-red px-8 py-4 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white"
+              class="w-full bg-auction-red py-3.5 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white lg:w-auto lg:px-8 lg:py-4"
               href="./src/pages/place-bid.html"
               >Place a Bid</a
             >
             <a
-              class="border border-paper/20 px-8 py-4 text-center text-xs font-medium uppercase tracking-[0.2em] text-paper/60"
+              class="hidden sm:block border border-paper/20 px-8 py-4 text-center text-xs font-medium uppercase tracking-[0.2em] text-paper/60"
               href="#auctions-grid"
               >View All Auctions</a
             >
