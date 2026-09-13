@@ -42,6 +42,10 @@ export function resolveDisplayName(
 }
 
 export function getUserState(): UserState | null {
+  localStorage.removeItem("arthaus_custom_avatars");
+  localStorage.removeItem("arthaus_custom_banners");
+  localStorage.removeItem("arthaus_full_names");
+
   const raw = localStorage.getItem(USER_STORAGE_KEY);
 
   if (!raw) {
@@ -56,17 +60,10 @@ export function getUserState(): UserState | null {
 }
 
 export function setUserState(user: UserState): void {
-  const normalizedAvatarUrl =
-    getCustomAvatar(user.email, user.name) || undefined;
-  const sanitizedUser: UserState = {
-    ...user,
-    customAvatarUrl: normalizedAvatarUrl,
-  };
-
-  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sanitizedUser));
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
   window.dispatchEvent(
     new CustomEvent<UserState>("arthaus:user-state-updated", {
-      detail: sanitizedUser,
+      detail: user,
     }),
   );
 }

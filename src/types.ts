@@ -7,8 +7,7 @@ export interface UserState {
   name: string;
   email: string;
   credits: number;
-  fullName?: string;
-  customAvatarUrl?: string;
+  avatarUrl?: string;
 }
 
 export interface MediaItem {
@@ -62,6 +61,8 @@ export interface LoginResponse {
   name?: string;
   email?: string;
   credits?: number;
+  avatar?: MediaItem;
+  banner?: MediaItem;
   accessToken?: string;
 }
 

@@ -1,24 +1,8 @@
 import { get } from "../api/get";
 import type { ApiResponse, Bid, Listing, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
-import {
-  clearOtherProfileMedia,
-  getCustomAvatar,
-  getCustomBanner,
-  getUserState,
-  TOKEN_STORAGE_KEY,
-} from "./user-state";
+import { getUserState, TOKEN_STORAGE_KEY } from "./user-state";
 import "../styles/tailwind.css";
-
-function getDisplayBannerUrl(profile: Profile): string | undefined {
-  const customBannerUrl = getCustomBanner(profile.email, profile.name);
-  if (customBannerUrl) {
-    return customBannerUrl;
-  }
-
-  const serverBannerUrl = profile.banner?.url?.trim();
-  return serverBannerUrl || undefined;
-}
 
 const API_BASE_URL = "https://v2.api.noroff.dev/auction/profiles";
 
@@ -102,20 +86,18 @@ function renderProfile(profile: Profile): void {
   avatarElement.removeAttribute("src");
   avatarElement.alt = "";
   avatarElement.classList.add("hidden");
-  initialsElement.classList.add("hidden");
 
   bannerElement.removeAttribute("src");
   bannerElement.alt = "";
   bannerElement.classList.add("hidden");
-  defaultBannerElement.classList.add("hidden");
+  if (defaultBannerElement) defaultBannerElement.classList.add("hidden");
 
   nameElement.textContent = `@${displayName}`;
   metaElement.textContent = profile.email;
   bioElement.textContent = profile.bio || "No bio added yet.";
   creditsElement.textContent = String(profile.credits ?? 0);
 
-  const customAvatarUrl = getCustomAvatar(profile.email, profile.name);
-  const avatarUrl = customAvatarUrl || profile.avatar?.url?.trim();
+  const avatarUrl = profile.avatar?.url?.trim();
 
   if (avatarUrl) {
     avatarElement.src = avatarUrl;
@@ -128,7 +110,7 @@ function renderProfile(profile: Profile): void {
     avatarElement.classList.remove("hidden");
   }
 
-  const bannerUrl = getDisplayBannerUrl(profile);
+  const bannerUrl = profile.banner?.url?.trim();
 
   if (bannerUrl) {
     bannerElement.src = bannerUrl;
@@ -300,10 +282,6 @@ async function loadPublicProfile(): Promise<void> {
       `${API_BASE_URL}/${encodeURIComponent(profileName)}?_listings=true`,
       token,
       apiKey,
-    );
-    clearOtherProfileMedia(
-      profileResponse.data.email,
-      profileResponse.data.name,
     );
     const bidsResponse = await get<ApiResponse<Bid[]>>(
       `${API_BASE_URL}/${encodeURIComponent(profileName)}/bids?_listings=true&_seller=true`,

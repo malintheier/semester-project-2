@@ -1,5 +1,4 @@
 import type { UserState } from "../types";
-import { getCustomAvatar } from "../scripts/user-state";
 
 function getInitials(name: string): string {
   return name.trim().charAt(0).toUpperCase();
@@ -101,8 +100,7 @@ export function renderHeader(
     profileLink.href = getPageUrl("profile");
     profileLink.setAttribute("aria-label", "My profile");
 
-    const avatarUrl =
-      getCustomAvatar(user.email, user.name) ?? user.customAvatarUrl;
+    const avatarUrl = user.avatarUrl;
 
     if (avatarUrl) {
       const avatar = document.createElement("img");
