@@ -163,16 +163,20 @@ form.addEventListener("submit", async (event) => {
     const apiKey = await getOrCreateApiKey(token);
     const payload: {
       bio: string;
-      avatar?: { url: string; alt: string };
-      banner?: { url: string; alt: string };
+      avatar?: { url: string; alt: string } | null;
+      banner?: { url: string; alt: string } | null;
     } = { bio };
 
     if (avatarUrl) {
       payload.avatar = { url: avatarUrl, alt: "" };
+    } else {
+      payload.avatar = null;
     }
 
     if (bannerUrl) {
       payload.banner = { url: bannerUrl, alt: "" };
+    } else {
+      payload.banner = null;
     }
 
     const response = await put<ApiResponse<Profile>, typeof payload>(
