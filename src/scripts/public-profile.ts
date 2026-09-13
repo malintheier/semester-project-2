@@ -1,10 +1,20 @@
 import { get } from "../api/get";
 import type { ApiResponse, Bid, Listing, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
-import { getCustomAvatar, getUserState, TOKEN_STORAGE_KEY } from "./user-state";
+import {
+  getCustomAvatar,
+  getCustomBanner,
+  getUserState,
+  TOKEN_STORAGE_KEY,
+} from "./user-state";
 import "../styles/tailwind.css";
 
 function getDisplayBannerUrl(profile: Profile): string | undefined {
+  const customBannerUrl = getCustomBanner(profile.email, profile.name);
+  if (customBannerUrl) {
+    return customBannerUrl;
+  }
+
   const serverBannerUrl = profile.banner?.url?.trim();
   if (!serverBannerUrl) {
     return undefined;
