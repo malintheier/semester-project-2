@@ -2,7 +2,17 @@ import { get } from "../api/get";
 import { put } from "../api/put";
 import type { ApiResponse, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
-import { getUserState, setUserState, TOKEN_STORAGE_KEY } from "./user-state";
+import {
+  deleteCustomAvatar,
+  deleteCustomBanner,
+  getCustomAvatar,
+  getCustomBanner,
+  getUserState,
+  saveCustomAvatar,
+  saveCustomBanner,
+  setUserState,
+  TOKEN_STORAGE_KEY,
+} from "./user-state";
 import "../styles/tailwind.css";
 
 const API_BASE_URL = "https://v2.api.noroff.dev/auction/profiles";
@@ -73,10 +83,16 @@ function updateBannerPreview(): void {
 }
 
 function populateForm(data: Profile): void {
+  const user = getUserState();
+  const savedAvatarUrl =
+    getCustomAvatar(data.email, data.name) ?? data.avatar?.url;
+  const savedBannerUrl =
+    getCustomBanner(data.email, data.name) ?? data.banner?.url;
+
   bioElement.value = data.bio || "";
-  avatarUrlElement.value = data.avatar?.url || "";
+  avatarUrlElement.value = savedAvatarUrl || "";
   initialAvatarUrl = avatarUrlElement.value;
-  bannerUrlElement.value = data.banner?.url || "";
+  bannerUrlElement.value = savedBannerUrl || "";
   avatarInitialsElement.textContent = "";
   avatarInitialsElement.classList.add("hidden");
   updateAvatarPreview();
@@ -140,13 +156,23 @@ form.addEventListener("submit", async (event) => {
     const apiKey = await getOrCreateApiKey(token);
     const payload: {
       bio: string;
-      avatar: { url: string; alt: string };
-      banner: { url: string; alt: string };
-    } = {
-      bio,
-      avatar: { url: avatarUrl, alt: "" },
-      banner: { url: bannerUrl, alt: "" },
-    };
+      avatar?: { url: string; alt: string };
+      banner?: { url: string; alt: string };
+    } = { bio };
+
+    if (avatarUrl) {
+      payload.avatar = { url: avatarUrl, alt: "" };
+      saveCustomAvatar(profile.email, avatarUrl, profile.name);
+    } else {
+      deleteCustomAvatar(profile.email, profile.name);
+    }
+
+    if (bannerUrl) {
+      payload.banner = { url: bannerUrl, alt: "" };
+      saveCustomBanner(profile.email, bannerUrl, profile.name);
+    } else {
+      deleteCustomBanner(profile.email, profile.name);
+    }
 
     const response = await put<ApiResponse<Profile>, typeof payload>(
       `${API_BASE_URL}/${encodeURIComponent(profile.name)}`,
@@ -161,7 +187,7 @@ form.addEventListener("submit", async (event) => {
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      avatarUrl: profile.avatar?.url || undefined,
+      avatarUrl: avatarUrl || profile.avatar?.url || undefined,
     });
     setStatus("Profile saved.");
     window.setTimeout(() => {

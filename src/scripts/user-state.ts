@@ -42,10 +42,6 @@ export function resolveDisplayName(
 }
 
 export function getUserState(): UserState | null {
-  localStorage.removeItem("arthaus_custom_avatars");
-  localStorage.removeItem("arthaus_custom_banners");
-  localStorage.removeItem("arthaus_full_names");
-
   const raw = localStorage.getItem(USER_STORAGE_KEY);
 
   if (!raw) {

@@ -1,7 +1,12 @@
 import { get } from "../api/get";
 import type { ApiResponse, Bid, Listing, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
-import { getUserState, TOKEN_STORAGE_KEY } from "./user-state";
+import {
+  getCustomAvatar,
+  getCustomBanner,
+  getUserState,
+  TOKEN_STORAGE_KEY,
+} from "./user-state";
 import "../styles/tailwind.css";
 
 const API_BASE_URL = "https://v2.api.noroff.dev/auction/profiles";
@@ -97,7 +102,8 @@ function renderProfile(profile: Profile): void {
   bioElement.textContent = profile.bio || "No bio added yet.";
   creditsElement.textContent = String(profile.credits ?? 0);
 
-  const avatarUrl = profile.avatar?.url?.trim();
+  const customAvatarUrl = getCustomAvatar(profile.email, profile.name);
+  const avatarUrl = customAvatarUrl || profile.avatar?.url?.trim();
 
   if (avatarUrl) {
     avatarElement.src = avatarUrl;
@@ -110,7 +116,8 @@ function renderProfile(profile: Profile): void {
     avatarElement.classList.remove("hidden");
   }
 
-  const bannerUrl = profile.banner?.url?.trim();
+  const customBannerUrl = getCustomBanner(profile.email, profile.name);
+  const bannerUrl = customBannerUrl || profile.banner?.url?.trim();
 
   if (bannerUrl) {
     bannerElement.src = bannerUrl;
