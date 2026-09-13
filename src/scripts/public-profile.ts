@@ -87,9 +87,6 @@ function openListing(listing: Listing): void {
 
 function getDisplayBannerUrl(profile: Profile): string | undefined {
   const customBannerUrl = getCustomBanner(profile.email, profile.name);
-  if (customBannerUrl === "REMOVED") {
-    return undefined;
-  }
   if (customBannerUrl) {
     return customBannerUrl;
   }
@@ -108,7 +105,6 @@ function renderProfile(profile: Profile): void {
   bannerElement.removeAttribute("src");
   bannerElement.alt = "";
   bannerElement.classList.add("hidden");
-  if (defaultBannerElement) defaultBannerElement.classList.add("hidden");
 
   nameElement.textContent = `@${displayName}`;
   metaElement.textContent = profile.email;
@@ -116,15 +112,7 @@ function renderProfile(profile: Profile): void {
   creditsElement.textContent = String(profile.credits ?? 0);
 
   const customAvatarUrl = getCustomAvatar(profile.email, profile.name);
-  let avatarUrl: string | undefined;
-
-  if (customAvatarUrl === "REMOVED") {
-    avatarUrl = undefined;
-  } else if (customAvatarUrl) {
-    avatarUrl = customAvatarUrl;
-  } else {
-    avatarUrl = profile.avatar?.url?.trim();
-  }
+  const avatarUrl = customAvatarUrl || profile.avatar?.url?.trim();
 
   if (avatarUrl) {
     avatarElement.src = avatarUrl;

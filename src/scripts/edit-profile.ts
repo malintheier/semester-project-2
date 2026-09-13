@@ -189,14 +189,22 @@ form.addEventListener("submit", async (event) => {
       payload.avatar = { url: avatarUrl, alt: "" };
       saveCustomAvatar(profile.email, avatarUrl, profile.name);
     } else {
-      saveCustomAvatar(profile.email, "REMOVED", profile.name);
+      payload.avatar = {
+        url: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&q=80&w=800",
+        alt: "Default avatar",
+      };
+      deleteCustomAvatar(profile.email, profile.name);
     }
 
     if (bannerUrl) {
       payload.banner = { url: bannerUrl, alt: "" };
       saveCustomBanner(profile.email, bannerUrl, profile.name);
     } else {
-      saveCustomBanner(profile.email, "REMOVED", profile.name);
+      payload.banner = {
+        url: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=1600",
+        alt: "Default banner",
+      };
+      deleteCustomBanner(profile.email, profile.name);
     }
 
     const response = await put<ApiResponse<Profile>, typeof payload>(

@@ -101,9 +101,7 @@ export function renderHeader(
     profileLink.href = getPageUrl("profile");
     profileLink.setAttribute("aria-label", "My profile");
 
-    const customAvatar = getCustomAvatar(user.email, user.name);
-    const avatarUrl =
-      customAvatar === "REMOVED" ? undefined : customAvatar || user.avatarUrl;
+    const avatarUrl = getCustomAvatar(user.email, user.name) || user.avatarUrl;
 
     if (avatarUrl) {
       const avatar = document.createElement("img");
