@@ -56,10 +56,17 @@ export function getUserState(): UserState | null {
 }
 
 export function setUserState(user: UserState): void {
-  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+  const normalizedAvatarUrl =
+    getCustomAvatar(user.email, user.name) || undefined;
+  const sanitizedUser: UserState = {
+    ...user,
+    customAvatarUrl: normalizedAvatarUrl,
+  };
+
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sanitizedUser));
   window.dispatchEvent(
     new CustomEvent<UserState>("arthaus:user-state-updated", {
-      detail: user,
+      detail: sanitizedUser,
     }),
   );
 }
@@ -280,6 +287,8 @@ export function clearUserState(): void {
   localStorage.removeItem(TOKEN_STORAGE_KEY);
   localStorage.removeItem(API_KEY_STORAGE_KEY);
   localStorage.removeItem(USER_STORAGE_KEY);
+  localStorage.removeItem(CUSTOM_AVATAR_STORAGE_KEY);
+  localStorage.removeItem(CUSTOM_BANNER_STORAGE_KEY);
   sessionStorage.removeItem(TOKEN_STORAGE_KEY);
   sessionStorage.removeItem(API_KEY_STORAGE_KEY);
   sessionStorage.removeItem(USER_STORAGE_KEY);

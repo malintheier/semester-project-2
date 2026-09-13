@@ -341,11 +341,12 @@ async function loadProfile(): Promise<void> {
       apiKey,
     );
     const profile = profileResponse.data;
+    const customAvatarUrl = getCustomAvatar(profile.email, profile.name);
     setUserState({
       name: profile.name,
       email: profile.email,
       credits: Number(profile.credits ?? 0),
-      customAvatarUrl: user.customAvatarUrl,
+      customAvatarUrl: customAvatarUrl || undefined,
     });
     const bidsWithSeller = await hydrateBidsWithSeller(bidsResponse.data || []);
 
