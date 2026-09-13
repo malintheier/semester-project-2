@@ -151,8 +151,8 @@ form.addEventListener("submit", async (event) => {
   const bio = bioElement.value.trim();
   const avatarUrl = avatarUrlElement.value.trim();
   const bannerUrl = bannerUrlElement.value.trim();
-  const originalAvatarUrl = profile.avatar?.url || "";
-  const originalBannerUrl = profile.banner?.url || "";
+  const savedCustomAvatarUrl = getCustomAvatar(profile.email, profile.name);
+  const savedCustomBannerUrl = getCustomBanner(profile.email, profile.name);
 
   if (bio.length > 160) {
     setStatus("Bio must be 160 characters or fewer.", true);
@@ -183,18 +183,16 @@ form.addEventListener("submit", async (event) => {
     );
 
     profile = response.data;
-    const avatarWasChanged = avatarUrl !== originalAvatarUrl;
-    const bannerWasChanged = bannerUrl !== originalBannerUrl;
 
     if (avatarUrl) {
       saveCustomAvatar(profile.email, avatarUrl, profile.name);
-    } else if (avatarWasChanged) {
+    } else if (savedCustomAvatarUrl) {
       deleteCustomAvatar(profile.email, profile.name);
     }
 
     if (bannerUrl) {
       saveCustomBanner(profile.email, bannerUrl, profile.name);
-    } else if (bannerWasChanged) {
+    } else if (savedCustomBannerUrl) {
       deleteCustomBanner(profile.email, profile.name);
     }
 
