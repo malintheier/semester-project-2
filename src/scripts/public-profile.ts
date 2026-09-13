@@ -111,12 +111,14 @@ function openListing(listing: Listing): void {
 function renderProfile(profile: Profile): void {
   const displayName = profile.name;
 
-  avatarElement.removeAttribute("src");
+  avatarElement.src =
+    "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
   avatarElement.alt = "";
   avatarElement.classList.add("hidden");
   initialsElement.classList.remove("hidden");
 
-  bannerElement.removeAttribute("src");
+  bannerElement.src =
+    "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
   bannerElement.alt = "";
   bannerElement.classList.add("hidden");
   defaultBannerElement.classList.remove("hidden");
