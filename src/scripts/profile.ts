@@ -152,7 +152,6 @@ async function hydrateBidsWithSeller(bids: Bid[]): Promise<Bid[]> {
 }
 
 function renderProfile(profile: Profile): void {
-  const user = getUserState();
   const displayName = profile.name;
 
   nameElement.textContent = `@${displayName}`;
@@ -161,24 +160,37 @@ function renderProfile(profile: Profile): void {
   creditsElement.textContent = String(profile.credits ?? 0);
   initialsElement.textContent = getInitials(displayName);
 
-  const customAvatarUrl =
-    getCustomAvatar(profile.email, profile.name) ?? user?.customAvatarUrl;
+  const customAvatarUrl = getCustomAvatar(profile.email, profile.name);
+  const profileAvatarUrl = profile.avatar?.url?.trim();
+  const fallbackAvatarUrl =
+    profileAvatarUrl &&
+    !profileAvatarUrl.includes("images.unsplash.com") &&
+    profileAvatarUrl !== "https://images.unsplash.com/"
+      ? profileAvatarUrl
+      : undefined;
+  const activeAvatarUrl = customAvatarUrl || fallbackAvatarUrl;
 
-  if (customAvatarUrl) {
+  if (activeAvatarUrl) {
     avatarElement.onerror = () => {
+      avatarElement.removeAttribute("src");
+      avatarElement.alt = "";
       avatarElement.classList.add("hidden");
       initialsElement.classList.remove("hidden");
     };
-    avatarElement.src = customAvatarUrl;
+    avatarElement.src = activeAvatarUrl;
     avatarElement.alt = `${displayName}'s avatar`;
     avatarElement.classList.remove("hidden");
     initialsElement.classList.add("hidden");
 
     if (avatarElement.complete && avatarElement.naturalWidth === 0) {
+      avatarElement.removeAttribute("src");
+      avatarElement.alt = "";
       avatarElement.classList.add("hidden");
       initialsElement.classList.remove("hidden");
     }
   } else {
+    avatarElement.removeAttribute("src");
+    avatarElement.alt = "";
     avatarElement.classList.add("hidden");
     initialsElement.classList.remove("hidden");
   }

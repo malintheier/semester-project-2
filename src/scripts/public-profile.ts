@@ -1,7 +1,7 @@
 import { get } from "../api/get";
 import type { ApiResponse, Bid, Listing, Profile } from "../types";
 import { getOrCreateApiKey } from "./api-key";
-import { getUserState, TOKEN_STORAGE_KEY } from "./user-state";
+import { getCustomAvatar, getUserState, TOKEN_STORAGE_KEY } from "./user-state";
 import "../styles/tailwind.css";
 
 function getDisplayBannerUrl(profile: Profile): string | undefined {
@@ -106,15 +106,32 @@ function renderProfile(profile: Profile): void {
   creditsElement.textContent = String(profile.credits ?? 0);
   initialsElement.textContent = getInitials(displayName);
 
-  if (profile.avatar?.url) {
-    avatarElement.src = profile.avatar.url;
-    avatarElement.alt = profile.avatar.alt || `${profile.name}'s avatar`;
+  const customAvatarUrl = getCustomAvatar(profile.email, profile.name);
+  const profileAvatarUrl = profile.avatar?.url?.trim();
+  const fallbackAvatarUrl =
+    profileAvatarUrl &&
+    !profileAvatarUrl.includes("images.unsplash.com") &&
+    profileAvatarUrl !== "https://images.unsplash.com/"
+      ? profileAvatarUrl
+      : undefined;
+  const activeAvatarUrl = customAvatarUrl || fallbackAvatarUrl;
+
+  if (activeAvatarUrl) {
+    avatarElement.src = activeAvatarUrl;
+    avatarElement.alt = profile.avatar?.alt || `${profile.name}'s avatar`;
     avatarElement.onerror = () => {
+      avatarElement.removeAttribute("src");
+      avatarElement.alt = "";
       avatarElement.classList.add("hidden");
       initialsElement.classList.remove("hidden");
     };
     avatarElement.classList.remove("hidden");
     initialsElement.classList.add("hidden");
+  } else {
+    avatarElement.removeAttribute("src");
+    avatarElement.alt = "";
+    avatarElement.classList.add("hidden");
+    initialsElement.classList.remove("hidden");
   }
 
   const bannerUrl = getDisplayBannerUrl(profile);
